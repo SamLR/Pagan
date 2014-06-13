@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Moq;
 using NUnit.Framework;
-using Pagan.DbComponents;
 using Pagan.Registry;
 using Pagan.Relationships;
 using Pagan.Tests.Fakes;
@@ -12,21 +11,21 @@ namespace Pagan.Tests
 {
     /// <summary>
     /// Calling Query(..) on a relationship property creates an expression mapping primary key fields from the principal
-    /// table to their foreign key counterparts on the dependent. The dependent's host controller may configure the 
+    /// table to their foreign key counterparts on the dependent. The dependent's host Table may configure the 
     /// foreign key columns explicitly, or leave it to convention. Therefore we want to test the explicit scenario,
     /// and the various implicit ones.
     /// </summary>
     [TestFixture]
     public class RelationshipTests
     {
-        private Mock<IDbConfiguration> _mockConfig;
-        private IControllerFactory _factory;
+        private Mock<ITableConfiguration> _mockConfig;
+        private ITableFactory _factory;
 
         [SetUp]
         public void Setup()
         {
 
-            _mockConfig = new Mock<IDbConfiguration>();
+            _mockConfig = new Mock<ITableConfiguration>();
 
             _mockConfig
                 .Setup(x => x.GetDefaultSchemaName()).Returns("dbo");
@@ -36,11 +35,11 @@ namespace Pagan.Tests
                 .Callback((Column c) => c.DbName = c.Name);
 
             _mockConfig
-                .Setup(x => x.SetDefaultPrimaryKey(It.IsAny<Column[]>()))
-                .Callback((IEnumerable<Column> c) =>
+                .Setup(x => x.SetDefaultPrimaryKey(It.IsAny<Table>()))
+                .Callback((Table t) =>
                 {
-                    var id = c.First(x => x.Name == "Id");
-                    id.Table.SetKeys(id);
+                    var id = t.Columns.First(x => x.Name == "Id");
+                    id.Table.SetKey(id);
                 });
 
             _mockConfig
@@ -52,7 +51,7 @@ namespace Pagan.Tests
                 });
 
 
-            _factory = new FakeControllerFactory(_mockConfig.Object);
+            _factory = new FakeTableFactory(_mockConfig.Object);
         }
 
         /// <summary>
@@ -62,7 +61,7 @@ namespace Pagan.Tests
         [Test]
         public void ExplicitlyConfiguredForeignKeyDoesNotUseConventions()
         {
-            var orderDetail = _factory.GetController<OrderDetail>().Instance;
+            var orderDetail = _factory.GetTable<OrderDetail>().Controller;
             
             orderDetail.Product.Query();
             _mockConfig.Verify(x => x.SetDefaultForeignKey(It.IsAny<IDependent>(), It.IsAny<Column[]>()), Times.Never);
@@ -75,7 +74,7 @@ namespace Pagan.Tests
         [Test]
         public void UnconfiguredForeignKeyUsesConventions()
         {
-            var supplier = _factory.GetController<Supplier>().Instance;
+            var supplier = _factory.GetTable<Supplier>().Controller;
             
             supplier.Products.Query();
             _mockConfig.Verify(x => x.SetDefaultForeignKey(It.IsAny<IDependent>(), It.IsAny<Column[]>()), Times.Once);

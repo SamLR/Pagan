@@ -16,7 +16,7 @@ namespace Pagan.Registry
         {
             return new ConfigurationError(
                 "MissingTable",
-                "No settable property of type Pagan.DbComponents.Table was defined on the controller class {0}", 
+                "No settable property of type Pagan.DbComponents.Table was defined on the Table class {0}", 
                 controllerType);
         }
 
@@ -24,7 +24,7 @@ namespace Pagan.Registry
         {
             return new ConfigurationError(
                 "MissingColumns",
-                "No settable properties of type Pagan.DbComponents.Column were defined on the controller class {0}",
+                "No settable properties of type Pagan.DbComponents.Column were defined on the Table class {0}",
                 controllerType);
         }
 
@@ -32,7 +32,7 @@ namespace Pagan.Registry
         {
             return new ConfigurationError(
                 "MissingKey",
-                "No primary key was explicitly defined or could be inferred on the controller class {0}",
+                "No primary key was explicitly defined or could be inferred on the Table class {0}",
                 controllerType);
         }
 
@@ -40,7 +40,7 @@ namespace Pagan.Registry
         {
             return new ConfigurationError(
                 "MissingForeignKey",
-                "No foreign key was explicitly defined or could be inferred on the controller class {0}",
+                "No foreign key was explicitly defined or could be inferred on the Table class {0}",
                 controllerType);
         }
     }

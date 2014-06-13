@@ -1,10 +1,9 @@
-using Pagan.DbComponents;
 using Pagan.Relationships;
 
 namespace Pagan.Tests.TestControllers
 {
     /// <summary>
-    /// This test controller provides it's own configuration rather than relying on configuration conventions.
+    /// This test Table provides it's own configuration rather than relying on configuration conventions.
     /// So it provides a Configure method to sets its primary keys and foreign keys, and defined a Schema property.
     /// It should NOT cause DefaultSchema, PrimaryKey, or ForeignKey helpers to be called on the DbConfig.
     /// </summary>
@@ -12,7 +11,7 @@ namespace Pagan.Tests.TestControllers
     {
         public void Configure()
         {
-            OrderDetails.SetKeys(OrderId, ProductId);
+            OrderDetails.SetKey(OrderId, ProductId);
             Cost.DbName = "StandardCost";
             Product.SetForeignKey(ProductId);
 

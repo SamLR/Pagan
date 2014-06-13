@@ -1,14 +1,13 @@
 using System;
 using System.Linq;
-using Pagan.DbComponents;
 using Pagan.Relationships;
 
 namespace Pagan.Registry
 {
-    public class DbConfiguration: IDbConfiguration
+    public class TableConfiguration: ITableConfiguration
     {
         /// <summary>
-        /// This method is called during controller configuration to provide a DbName for the default schema where
+        /// This method is called during Table configuration to provide a DbName for the default schema where
         /// this property has not been explicitly set
         /// </summary>
         /// <returns>The default schema name</returns>
@@ -18,9 +17,9 @@ namespace Pagan.Registry
         }
 
         /// <summary>
-        /// This method is called during controller configuration to provide a DbName for columns where this property
+        /// This method is called during Table configuration to provide a DbName for columns where this property
         /// has not been explicitly set. 
-        /// By default, DbName is set to match the name of the property on the controller.
+        /// By default, DbName is set to match the name of the property on the Table.
         /// </summary>
         /// <param name="column">The column to be configured</param>
         public void SetDefaultColumnDbName(Column column)
@@ -29,20 +28,20 @@ namespace Pagan.Registry
         }
 
         /// <summary>
-        /// This method is called during controller configuration to attempt to set the primary key for a table
+        /// This method is called during Table configuration to attempt to set the primary key for a table
         /// where the key has not been explicitly set.
-        /// By default, the key is set to the first column that matches "Id" or "{TableName}Id"
+        /// Attempts to match, in order, "Id", "{ControllerName}Id", "{ControllerName}_Id", "{TableName}Id", "{TableName}_Id"
         /// </summary>
-        /// <param name="columns">the available columns</param>
-        public void SetDefaultPrimaryKey(Column[] columns)
+        /// <param name="table">the table to configure</param>
+        public void SetDefaultPrimaryKey(Table table)
         {
-            var idColumn = columns
-                .FirstOrDefault(c =>
-                    String.Equals("Id", c.Name, StringComparison.InvariantCultureIgnoreCase)
-                    || String.Equals(c.Table.DbName + "Id", c.DbName, StringComparison.InvariantCultureIgnoreCase));
-
-            if(!ReferenceEquals(null,idColumn))
-                idColumn.Table.SetKeys(idColumn);
+            Column column;
+            if (table.TryGetColumn("Id", out column)
+                || table.TryGetColumn(table.Name + "Id", out column)
+                || table.TryGetColumn(table.Name + "_Id", out column)
+                || table.TryGetColumn(table.DbName + "Id", out column)
+                || table.TryGetColumn(table.DbName + "_Id", out column))
+                table.SetKey(column);
         }
 
         /// <summary>

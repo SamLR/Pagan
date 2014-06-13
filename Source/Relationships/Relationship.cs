@@ -1,5 +1,4 @@
-﻿using Pagan.DbComponents;
-using Pagan.Queries;
+﻿using Pagan.Queries;
 
 namespace Pagan.Relationships
 {

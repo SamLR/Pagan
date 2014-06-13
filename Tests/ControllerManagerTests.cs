@@ -8,19 +8,19 @@ namespace Pagan.Tests
     [TestFixture]
     public class ControllerManagerTests
     {
-        private ControllerFactory _factory;
+        private TableFactory _factory;
             
         [SetUp]
         public void Setup()
         {
-            _factory = new ControllerFactory(new Mock<IDbConfiguration>().Object);
+            _factory = new TableFactory(new Mock<ITableConfiguration>().Object);
         }
 
         [Test]
         public void CreatesSingletonControllers()
         {
-            var c1 = _factory.GetController<OrderDetail>();
-            var c2 = _factory.GetController<OrderDetail>();
+            var c1 = _factory.GetTable<OrderDetail>();
+            var c2 = _factory.GetTable<OrderDetail>();
 
             Assert.AreSame(c1,c2);
         }

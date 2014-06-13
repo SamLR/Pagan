@@ -1,15 +1,10 @@
-﻿using Pagan.DbComponents;
-using Pagan.Registry;
-
-namespace Pagan.Relationships
+﻿namespace Pagan.Relationships
 {
     public abstract class ParentRef<T> : LinkRef<T>, IDependent
     {
-        protected ParentRef(Controller controller, string name) : base(controller, name)
-        {
-            
+        protected ParentRef(Table table, string name) : base(table, name)
+        {          
         }
-
 
         public bool OptionalParent { get; protected set; }
         public Column[] ForeignKeyColumns { get; private set; }

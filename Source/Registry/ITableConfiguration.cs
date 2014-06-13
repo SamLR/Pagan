@@ -1,14 +1,12 @@
-using System.Collections.Generic;
-using Pagan.DbComponents;
 using Pagan.Relationships;
 
 namespace Pagan.Registry
 {
-    public interface IDbConfiguration
+    public interface ITableConfiguration
     {
         string GetDefaultSchemaName();
         void SetDefaultColumnDbName(Column column);
-        void SetDefaultPrimaryKey(Column[] columns);
+        void SetDefaultPrimaryKey(Table table);
         void SetDefaultForeignKey(IDependent dependent, Column[] columns);
     }
 }

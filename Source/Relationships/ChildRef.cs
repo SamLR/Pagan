@@ -1,14 +1,10 @@
-﻿using System.Linq;
-using Pagan.DbComponents;
-using Pagan.Registry;
-
-namespace Pagan.Relationships
+﻿namespace Pagan.Relationships
 {
     public abstract class ChildRef<T> : LinkRef<T>, IPrincipal
     {
-        protected ChildRef(Controller controller, string name) : base(controller, name)
+        protected ChildRef(Table table, string name) : base(table, name)
         {
-            PrimaryKeyColumns = Controller.KeyColumns;
+            PrimaryKeyColumns = Table.KeyColumns;
         }
 
         public bool ManyDependents { get; protected set; }

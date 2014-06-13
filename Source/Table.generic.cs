@@ -1,21 +1,21 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
-using Pagan.DbComponents;
+using Pagan.Registry;
 using Pagan.Relationships;
 
-namespace Pagan.Registry
+namespace Pagan
 {
-    public class Controller<T>: Controller
+    public class Table<T>: Table
     {
-        internal Controller(IControllerFactory factory, IDbConfiguration configuration): base(factory, configuration)
+        internal Table(ITableFactory factory, ITableConfiguration configuration): base(factory, configuration)
         {
             ControllerType = typeof (T);
-            Instance = Activator.CreateInstance<T>();
+            Controller = Activator.CreateInstance<T>();
             Configure();
         }
 
-        public T Instance { get; private set; }
+        public T Controller { get; private set; }
 
         private void Configure()
         {
@@ -25,42 +25,44 @@ namespace Pagan.Registry
                     .Where(p => p.CanWrite)
                     .ToArray();
 
-            Table = CreateMember<Table>(members.FirstOrDefault(m => m.PropertyType == typeof (Table)));
+            var table = members.FirstOrDefault(m => m.PropertyType == typeof(Table));
 
-            Schema = CreateMember<Schema>(members.FirstOrDefault(m => m.PropertyType == typeof(Schema)));
+            // throw if no table
+            if (table == null) throw ConfigurationError.MissingTable(ControllerType);
 
+            DbName = table.Name;
+            Name = ControllerType.Name;
+            table.SetValue(Controller, this);
+
+            // use the default schema if none was defined
+            Schema = CreateMember<Schema>(members.FirstOrDefault(m => m.PropertyType == typeof (Schema))) ??
+                     new Schema(this, Configuration.GetDefaultSchemaName());
+            
             Columns = members
                 .Where(m => m.PropertyType == typeof (Column))
                 .Select(CreateMember<Column>)
                 .ToArray();
 
+            // throw if no columns
+            if (Columns.Length == 0) throw ConfigurationError.MissingColumns(ControllerType);
+
             LinkRefs = members
                 .Where(m => typeof (LinkRef).IsAssignableFrom(m.PropertyType))
                 .Select(CreateMember<LinkRef>)
                 .ToArray();
-
-
-            // throw if no table
-            if (Table == null) throw ConfigurationError.MissingTable(ControllerType);
-
-            // throw if no columns
-            if (Columns.Length == 0) throw ConfigurationError.MissingColumns(ControllerType);
-
-            // call "Configure" method on controller if present
+            
+            // call "Configure" method on Table if present
             var method = ControllerType.GetMethod("Configure", BindingFlags.Public | BindingFlags.Instance);
             if (method != null)
             {
-                method.Invoke(Instance, null);
+                method.Invoke(Controller, null);
             }
-
-            // use the default schema if none was defined
-            if (Schema == null) Schema = new Schema(this, Configuration.GetDefaultSchemaName());
 
             // set the DbName for columns where none was explicitly defined.
             Columns.Where(c => String.IsNullOrEmpty(c.DbName)).ForEach(Configuration.SetDefaultColumnDbName);
 
             // attempt to set a default primary key where none was explicitly defined
-            if (!this.HasPrimaryKey()) Configuration.SetDefaultPrimaryKey(Columns);
+            if (!this.HasPrimaryKey()) Configuration.SetDefaultPrimaryKey(this);
 
             // throw if still no primary key
             if (!this.HasPrimaryKey()) throw ConfigurationError.MissingKey(ControllerType);
@@ -69,10 +71,10 @@ namespace Pagan.Registry
 
         private TMember CreateMember<TMember>(PropertyInfo property)
         {
-            if (ReferenceEquals(null, property)) return default(TMember);
+            if (property == null) return default(TMember);
 
             var dbComponent = Activator.CreateInstance(property.PropertyType, this, property.Name);
-            property.SetValue(Instance, dbComponent);
+            property.SetValue(Controller, dbComponent);
             return (TMember)dbComponent;
         }
     }

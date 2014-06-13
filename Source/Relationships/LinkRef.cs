@@ -5,14 +5,14 @@ namespace Pagan.Relationships
 {
     public abstract class LinkRef
     {
-        protected LinkRef(Controller controller, string name)
+        protected LinkRef(Table table, string name)
         {
-            Controller = controller;
+            Table = table;
             Name = name;
         }
 
         protected internal Type PartnerControllerType;
-        protected internal Controller Controller;
+        protected internal Table Table;
 
         protected internal void EnsureForeignKey()
         {
@@ -20,10 +20,10 @@ namespace Pagan.Relationships
             
             if (dependent.HasForeignKey()) return;
 
-            Controller.Configuration.SetDefaultForeignKey(dependent, Controller.Columns);
+            Table.Configuration.SetDefaultForeignKey(dependent, Table.Columns);
 
             if (!dependent.HasForeignKey())
-                throw ConfigurationError.MissingForeignKey(Controller.ControllerType);
+                throw ConfigurationError.MissingForeignKey(Table.ControllerType);
         }
 
         public string Name { get; protected set; }

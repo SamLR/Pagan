@@ -26,9 +26,9 @@ namespace Pagan
         }
 
 
-        public static bool HasPrimaryKey(this Controller controller)
+        public static bool HasPrimaryKey(this Table table)
         {
-            return controller.KeyColumns != null && controller.KeyColumns.Length > 0;
+            return table.KeyColumns != null && table.KeyColumns.Length > 0;
         }
 
     }

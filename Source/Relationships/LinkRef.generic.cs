@@ -1,24 +1,23 @@
 ﻿using System;
 using Pagan.Queries;
-using Pagan.Registry;
 
 namespace Pagan.Relationships
 {
     public abstract class LinkRef<T>: LinkRef
     {
-        protected LinkRef(Controller controller, string name): base(controller, name)
+        protected LinkRef(Table table, string name): base(table, name)
         {
             PartnerControllerType = typeof (T);
         }
 
-        private Controller<T> GetPartnerController()
+        private Table<T> GetPartnerTable()
         {
-            return Controller.Factory.GetController<T>();
+            return Table.Factory.GetTable<T>();
         }
 
         protected LinkRef GetPartnerRef()
         {
-            return GetPartnerController().GetLinkRef(Controller.ControllerType);
+            return GetPartnerTable().GetLinkRef(Table.ControllerType);
         }
 
         protected Relationship GetRelationship()
@@ -38,12 +37,12 @@ namespace Pagan.Relationships
 
         public Query Query()
         {
-            return new Query(GetPartnerController().Table) {Relationship = GetRelationship()};
+            return new Query(GetPartnerTable()) {Relationship = GetRelationship()};
         }
 
         public Query Query(Func<T, Query> controllerAction)
         {
-            var query = controllerAction(GetPartnerController().Instance);
+            var query = controllerAction(GetPartnerTable().Controller);
             query.Relationship = GetRelationship();
             return query;
         }

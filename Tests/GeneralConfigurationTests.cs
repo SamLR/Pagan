@@ -8,19 +8,19 @@ namespace Pagan.Tests
     [TestFixture]
     public class GeneralConfigurationTests
     {
-        private Controller<OrderDetail> _controller;
+        private Table<OrderDetail> _table;
 
         [SetUp]
         public void Setup()
         {
-            _controller = new Controller<OrderDetail>(new Mock<IControllerFactory>().Object, new Mock<IDbConfiguration>().Object);
+            _table = new Table<OrderDetail>(new Mock<ITableFactory>().Object, new Mock<ITableConfiguration>().Object);
         }
 
         [Test]
         public void SchemaInstanceIsCreated()
         {
-            var s1 = _controller.Instance.Dbo;
-            var s2 = _controller.Schema;
+            var s1 = _table.Controller.Dbo;
+            var s2 = _table.Schema;
             Assert.IsNotNull(s1);
             Assert.IsNotNull(s2);
             Assert.AreSame(s1, s2);
@@ -30,63 +30,54 @@ namespace Pagan.Tests
         [Test]
         public void TableInstanceIsCreatedAndReferencesSchema()
         {
-            var t1 = _controller.Instance.OrderDetails;
-            var t2 = _controller.Table;
-            Assert.IsNotNull(t1);
-            Assert.IsNotNull(t2);
-            Assert.AreSame(t1, t2);
-            Assert.AreEqual("OrderDetails", t1.DbName);
-            Assert.AreSame(_controller.Schema, _controller.Table.Schema);
+            var table = _table.Controller.OrderDetails;
+            Assert.IsNotNull(table);
+            Assert.IsNotNull(_table);
+            Assert.AreSame(table, _table);
+            Assert.AreEqual("OrderDetails", table.DbName);
+            Assert.AreEqual("OrderDetail", table.Name);
+            Assert.AreSame(_table.Schema, table.Schema);
         }
 
         [Test]
         public void ColumnInstancesAreCreatedAndReferenceTable()
         {
-            Assert.IsNotNull(_controller.Instance.OrderId);
-            Assert.IsNotNull(_controller.Instance.ProductId);
-            Assert.IsNotNull(_controller.Instance.Quantity);
-            Assert.IsNotNull(_controller.Instance.Cost);
+            Assert.IsNotNull(_table.Controller.OrderId);
+            Assert.IsNotNull(_table.Controller.ProductId);
+            Assert.IsNotNull(_table.Controller.Quantity);
+            Assert.IsNotNull(_table.Controller.Cost);
 
-            Assert.AreSame(_controller.Table, _controller.Instance.OrderId.Table);
-            Assert.AreSame(_controller.Table, _controller.Instance.ProductId.Table);
-            Assert.AreSame(_controller.Table, _controller.Instance.Quantity.Table);
-            Assert.AreSame(_controller.Table, _controller.Instance.Cost.Table);
+            Assert.AreSame(_table, _table.Controller.OrderId.Table);
+            Assert.AreSame(_table, _table.Controller.ProductId.Table);
+            Assert.AreSame(_table, _table.Controller.Quantity.Table);
+            Assert.AreSame(_table, _table.Controller.Cost.Table);
         }
 
         [Test]
         public void ColumnCollectionContainsAllColumns()
         {
-            Assert.AreEqual(4, _controller.Columns.Length);
-            Assert.Contains(_controller.Instance.OrderId, _controller.Columns);
-            Assert.Contains(_controller.Instance.ProductId, _controller.Columns);
-            Assert.Contains(_controller.Instance.Quantity, _controller.Columns);
-            Assert.Contains(_controller.Instance.Cost, _controller.Columns);
+            Assert.AreEqual(4, _table.Columns.Length);
+            Assert.Contains(_table.Controller.OrderId, _table.Columns);
+            Assert.Contains(_table.Controller.ProductId, _table.Columns);
+            Assert.Contains(_table.Controller.Quantity, _table.Columns);
+            Assert.Contains(_table.Controller.Cost, _table.Columns);
         }
 
         [Test]
         public void KeyCollectionContainsKeyColumns()
         {
-            Assert.AreEqual(2, _controller.KeyColumns.Length);
-            Assert.Contains(_controller.Instance.OrderId, _controller.KeyColumns);
-            Assert.Contains(_controller.Instance.ProductId, _controller.KeyColumns);
-        }
-
-        [Test]
-        public void KeyIndexSetCorrectlyOnColumns()
-        {
-            Assert.IsTrue(_controller.Instance.OrderId.KeyIndex.HasValue);
-            Assert.IsTrue(_controller.Instance.ProductId.KeyIndex.HasValue);
-            Assert.AreEqual(0, _controller.Instance.OrderId.KeyIndex.Value);
-            Assert.AreEqual(1, _controller.Instance.ProductId.KeyIndex.Value);
+            Assert.AreEqual(2, _table.KeyColumns.Length);
+            Assert.Contains(_table.Controller.OrderId, _table.KeyColumns);
+            Assert.Contains(_table.Controller.ProductId, _table.KeyColumns);
         }
 
         [Test]
         public void ParentReferencesAreCreated()
         {
-            var product = _controller.Instance.Product;
+            var product = _table.Controller.Product;
             Assert.IsNotNull(product);
 
-            var order = _controller.Instance.Order;
+            var order = _table.Controller.Order;
             Assert.IsNotNull(order);
         }
     }

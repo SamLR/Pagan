@@ -1,7 +1,5 @@
-using System.Collections.Generic;
 using Moq;
 using NUnit.Framework;
-using Pagan.DbComponents;
 using Pagan.Registry;
 using Pagan.Tests.TestControllers;
 
@@ -10,14 +8,14 @@ namespace Pagan.Tests
     [TestFixture]
     public class ExplicitConfigurationTests
     {
-        private Controller<OrderDetail> _controller;
-        private Mock<IDbConfiguration> _mockConfig;
+        private Table<OrderDetail> _table;
+        private Mock<ITableConfiguration> _mockConfig;
 
         [SetUp]
         public void Setup()
         {
-            _mockConfig = new Mock<IDbConfiguration>();
-            _controller = new Controller<OrderDetail>(new Mock<IControllerFactory>().Object, _mockConfig.Object);
+            _mockConfig = new Mock<ITableConfiguration>();
+            _table = new Table<OrderDetail>(new Mock<ITableFactory>().Object, _mockConfig.Object);
         }
 
         [Test]
@@ -29,13 +27,13 @@ namespace Pagan.Tests
         [Test]
         public void ConfigureMethodIsCalled()
         {
-            Assert.IsTrue(_controller.Instance.ConfigureWasCalled);
+            Assert.IsTrue(_table.Controller.ConfigureWasCalled);
         }
         
         [Test]
         public void DoesNotUseDefaultKey()
         {
-            _mockConfig.Verify(x => x.SetDefaultPrimaryKey(It.IsAny<Column[]>()), Times.Never);
+            _mockConfig.Verify(x => x.SetDefaultPrimaryKey(It.IsAny<Table>()), Times.Never);
         }
 
         [Test]

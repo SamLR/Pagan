@@ -1,5 +1,4 @@
-﻿using Pagan.DbComponents;
-using Pagan.Registry;
+﻿using Pagan.Registry;
 using Pagan.Relationships;
 
 namespace Pagan.Queries

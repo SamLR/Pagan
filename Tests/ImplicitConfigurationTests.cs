@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Moq;
 using NUnit.Framework;
-using Pagan.DbComponents;
 using Pagan.Registry;
 using Pagan.Tests.TestControllers;
 
@@ -11,13 +10,13 @@ namespace Pagan.Tests
     [TestFixture]
     public class ImplicitConfigurationTests
     {
-        private Controller<Product> _controller;
-        private Mock<IDbConfiguration> _mockConfig;
+        private Table<Product> _table;
+        private Mock<ITableConfiguration> _mockConfig;
 
         [SetUp]
         public void Setup()
         {
-            _mockConfig = new Mock<IDbConfiguration>();
+            _mockConfig = new Mock<ITableConfiguration>();
             
             _mockConfig
                 .Setup(x => x.GetDefaultSchemaName()).Returns("dbo");
@@ -27,14 +26,14 @@ namespace Pagan.Tests
                 .Callback((Column c) => c.DbName = c.Name);
 
             _mockConfig
-                .Setup(x => x.SetDefaultPrimaryKey(It.IsAny<Column[]>()))
-                .Callback((IEnumerable<Column> c) =>
+                .Setup(x => x.SetDefaultPrimaryKey(It.IsAny<Table>()))
+                .Callback((Table t) =>
                 {
-                    var id = c.First(x => x.Name == "Id");
-                    id.Table.SetKeys(id);
+                    var id = t.Columns.First(x => x.Name == "Id");
+                    t.SetKey(id);
                 });
 
-            _controller = new Controller<Product>(new Mock<IControllerFactory>().Object, _mockConfig.Object);
+            _table = new Table<Product>(new Mock<ITableFactory>().Object, _mockConfig.Object);
         }
 
         [Test]
@@ -46,7 +45,7 @@ namespace Pagan.Tests
         [Test]
         public void UsesDefaultKey()
         {
-            _mockConfig.Verify(x => x.SetDefaultPrimaryKey(It.IsAny<Column[]>()), Times.Once);
+            _mockConfig.Verify(x => x.SetDefaultPrimaryKey(It.IsAny<Table>()), Times.Once);
         }
 
         [Test]

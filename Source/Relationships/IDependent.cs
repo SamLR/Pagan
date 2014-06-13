@@ -1,6 +1,4 @@
-﻿using Pagan.DbComponents;
-
-namespace Pagan.Relationships
+﻿namespace Pagan.Relationships
 {
     public interface IDependent
     {
