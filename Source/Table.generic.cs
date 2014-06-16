@@ -30,7 +30,11 @@ namespace Pagan
             // throw if no table
             if (table == null) throw ConfigurationError.MissingTable(ControllerType);
 
-            DbName = table.Name;
+            // check for attribute configuration. [UseAsTableName] on the controller or [DbName] on the table.
+            var dbName = table.GetCustomAttribute<DbNameAttribute>();
+            var useAsTable = ControllerType.GetCustomAttribute<UseAsTableNameAttribute>();
+
+            DbName = dbName != null ? dbName.Value : useAsTable != null ? ControllerType.Name : Name;
             Name = ControllerType.Name;
             table.SetValue(Controller, this);
 
@@ -40,7 +44,7 @@ namespace Pagan
             
             Columns = members
                 .Where(m => m.PropertyType == typeof (Column))
-                .Select(CreateMember<Column>)
+                .Select(CreateColumn)
                 .ToArray();
 
             // throw if no columns
@@ -51,15 +55,12 @@ namespace Pagan
                 .Select(CreateMember<LinkRef>)
                 .ToArray();
             
-            // call "Configure" method on Table if present
+            // call "Configure" method on Controller if defined
             var method = ControllerType.GetMethod("Configure", BindingFlags.Public | BindingFlags.Instance);
             if (method != null)
             {
                 method.Invoke(Controller, null);
             }
-
-            // set the DbName for columns where none was explicitly defined.
-            Columns.Where(c => String.IsNullOrEmpty(c.DbName)).ForEach(Configuration.SetDefaultColumnDbName);
 
             // attempt to set a default primary key where none was explicitly defined
             if (!this.HasPrimaryKey()) Configuration.SetDefaultPrimaryKey(this);
@@ -67,6 +68,14 @@ namespace Pagan
             // throw if still no primary key
             if (!this.HasPrimaryKey()) throw ConfigurationError.MissingKey(ControllerType);
 
+        }
+
+        private Column CreateColumn(PropertyInfo property)
+        {
+            var column = CreateMember<Column>(property);
+            var dbName = property.GetCustomAttribute<DbNameAttribute>();
+            column.DbName = (dbName != null) ? dbName.Value : column.Name;
+            return column;
         }
 
         private TMember CreateMember<TMember>(PropertyInfo property)

@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Column.cs" />
+    <Compile Include="DbNameAttribute.cs" />
     <Compile Include="Queries\FilterExpression.cs" />
     <Compile Include="Queries\Query.cs" />
     <Compile Include="Registry\ConfigurationError.cs" />
@@ -64,6 +65,7 @@
     <Compile Include="Relationships\Relationship.cs" />
     <Compile Include="Relationships\WithOne.cs" />
     <Compile Include="Relationships\WithOptional.cs" />
+    <Compile Include="UseAsTableNameAttribute.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
