@@ -4,44 +4,51 @@ using Pagan.Relationships;
 
 namespace Pagan.Registry
 {
-    public class TableConfiguration: ITableConfiguration
+    public class TableConventions: ITableConventions
     {
         /// <summary>
-        /// This method is called during Table configuration to provide a DbName for the default schema where
+        /// This method is called during Table conventions to provide a DbName for the default schema where
         /// this property has not been explicitly set
         /// </summary>
         /// <returns>The default schema name</returns>
-        public string GetDefaultSchemaName()
+        public string GetSchemaDbName(Table table)
         {
             return "dbo";
         }
 
+        public string GetTableDbName(Table table)
+        {
+            return table.Name;
+        }
+
         /// <summary>
-        /// This method is called during Table configuration to provide a DbName for columns where this property
+        /// This method is called during Table conventions to provide a DbName for columns where this property
         /// has not been explicitly set. 
         /// By default, DbName is set to match the name of the property on the Table.
         /// </summary>
         /// <param name="column">The column to be configured</param>
-        public void SetDefaultColumnDbName(Column column)
+        public string GetColumnDbName(Column column)
         {
-            column.DbName = column.Name;
+            return column.Name;
         }
 
         /// <summary>
-        /// This method is called during Table configuration to attempt to set the primary key for a table
+        /// This method is called during Table conventions to attempt to set the primary key for a table
         /// where the key has not been explicitly set.
         /// Attempts to match, in order, "Id", "{ControllerName}Id", "{ControllerName}_Id", "{TableName}Id", "{TableName}_Id"
         /// </summary>
         /// <param name="table">the table to configure</param>
-        public void SetDefaultPrimaryKey(Table table)
+        public Column[] GetPrimaryKey(Table table)
         {
             Column column;
-            if (table.TryGetColumn("Id", out column)
+            return
+                table.TryGetColumn("Id", out column)
                 || table.TryGetColumn(table.Name + "Id", out column)
                 || table.TryGetColumn(table.Name + "_Id", out column)
                 || table.TryGetColumn(table.DbName + "Id", out column)
-                || table.TryGetColumn(table.DbName + "_Id", out column))
-                table.SetKey(column);
+                || table.TryGetColumn(table.DbName + "_Id", out column)
+                    ? new[] {column}
+                    : new Column[0];
         }
 
         /// <summary>

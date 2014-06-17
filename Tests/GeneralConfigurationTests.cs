@@ -13,7 +13,7 @@ namespace Pagan.Tests
         [SetUp]
         public void Setup()
         {
-            _table = new Table<OrderDetail>(new Mock<ITableFactory>().Object, new Mock<ITableConfiguration>().Object);
+            _table = new Table<OrderDetail>(new Mock<ITableFactory>().Object, new Mock<ITableConventions>().Object);
         }
 
         [Test]
@@ -34,8 +34,7 @@ namespace Pagan.Tests
             Assert.IsNotNull(table);
             Assert.IsNotNull(_table);
             Assert.AreSame(table, _table);
-            Assert.AreEqual("OrderDetails", table.DbName);
-            Assert.AreEqual("OrderDetail", table.Name);
+            Assert.AreEqual("OrderDetails", table.Name);
             Assert.AreSame(_table.Schema, table.Schema);
         }
 

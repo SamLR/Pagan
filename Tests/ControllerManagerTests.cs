@@ -13,7 +13,7 @@ namespace Pagan.Tests
         [SetUp]
         public void Setup()
         {
-            _factory = new TableFactory(new Mock<ITableConfiguration>().Object);
+            _factory = new TableFactory(new Mock<ITableConventions>().Object);
         }
 
         [Test]

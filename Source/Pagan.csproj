@@ -52,8 +52,8 @@
     <Compile Include="Table.generic.cs" />
     <Compile Include="Registry\TableFactory.cs" />
     <Compile Include="Registry\ITableFactory.cs" />
-    <Compile Include="Registry\ITableConfiguration.cs" />
-    <Compile Include="Registry\TableConfiguration.cs" />
+    <Compile Include="Registry\ITableConventions.cs" />
+    <Compile Include="Registry\TableConventions.cs" />
     <Compile Include="Relationships\ChildRef.cs" />
     <Compile Include="Relationships\HasMany.cs" />
     <Compile Include="Relationships\HasOne.cs" />

@@ -12,7 +12,7 @@ namespace Pagan.Tests.Fakes
 
         public Mock<ITableFactory> Mock { get; private set; }
 
-        public FakeTableFactory(ITableConfiguration config)
+        public FakeTableFactory(ITableConventions config)
         {
             Mock = new Mock<ITableFactory>();
 

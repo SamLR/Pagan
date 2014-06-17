@@ -1,8 +1,7 @@
-using System.Collections.Generic;
-using System.Linq;
 using Moq;
 using NUnit.Framework;
 using Pagan.Registry;
+using Pagan.Tests.Fakes;
 using Pagan.Tests.TestControllers;
 
 namespace Pagan.Tests
@@ -11,47 +10,48 @@ namespace Pagan.Tests
     public class ImplicitConfigurationTests
     {
         private Table<Product> _table;
-        private Mock<ITableConfiguration> _mockConfig;
+        private FakeConventions _conventions;
 
         [SetUp]
         public void Setup()
         {
-            _mockConfig = new Mock<ITableConfiguration>();
-            
-            _mockConfig
-                .Setup(x => x.GetDefaultSchemaName()).Returns("dbo");
-            
-            _mockConfig
-                .Setup(x => x.SetDefaultColumnDbName(It.IsAny<Column>()))
-                .Callback((Column c) => c.DbName = c.Name);
+            _conventions = new FakeConventions();
 
-            _mockConfig
-                .Setup(x => x.SetDefaultPrimaryKey(It.IsAny<Table>()))
-                .Callback((Table t) =>
-                {
-                    var id = t.Columns.First(x => x.Name == "Id");
-                    t.SetKey(id);
-                });
-
-            _table = new Table<Product>(new Mock<ITableFactory>().Object, _mockConfig.Object);
+            _table = new Table<Product>(new Mock<ITableFactory>().Object, _conventions);
         }
 
         [Test]
-        public void UsesDefaultSchema()
+        public void UsesConventionForSchema()
         {
-            _mockConfig.Verify(x => x.GetDefaultSchemaName(), Times.Once);
+            _conventions.Mock.Verify(x => x.GetSchemaDbName(It.IsAny<Table>()), Times.Once);
+            Assert.IsNotNull(_table.Schema);
+            Assert.AreEqual("dbo", _table.Schema.DbName);
         }
 
         [Test]
-        public void UsesDefaultKey()
+        public void UsesConventionForPrimaryKey()
         {
-            _mockConfig.Verify(x => x.SetDefaultPrimaryKey(It.IsAny<Table>()), Times.Once);
+            _conventions.Mock.Verify(x => x.GetPrimaryKey(It.IsAny<Table>()), Times.Once);
+            Assert.IsNotNull(_table.KeyColumns);
+            Assert.AreEqual(1, _table.KeyColumns.Length);
+            Assert.Contains(_table.Controller.Id, _table.KeyColumns);
         }
 
         [Test]
-        public void UsesDefaultColumnNaming()
+        public void UsesConventionForColumnNaming()
         {
-            _mockConfig.Verify(x => x.SetDefaultColumnDbName(It.IsAny<Column>()), Times.Exactly(3));
+            _conventions.Mock.Verify(x => x.GetColumnDbName(It.IsAny<Column>()), Times.Exactly(3));
+            Assert.AreEqual("Id", _table.Controller.Id.DbName);
+            Assert.AreEqual("Name", _table.Controller.Name.DbName);
+            Assert.AreEqual("SupplierId", _table.Controller.SupplierId.DbName);
+        }
+
+        [Test]
+        public void UsesConventionForTableNaming()
+        {
+            _conventions.Mock.Verify(x => x.GetTableDbName(It.IsAny<Table>()), Times.Once);
+            Assert.AreEqual("Products", _table.Controller.Products.DbName);
+            Assert.AreEqual("Products", _table.DbName);
         }
 
 

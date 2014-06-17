@@ -7,20 +7,20 @@ namespace Pagan
 {
     public abstract class Table
     {
-        protected Table(ITableFactory factory, ITableConfiguration configuration)
+        protected Table(ITableFactory factory, ITableConventions conventions)
         {
             Factory = factory;
-            Configuration = configuration;
+            Conventions = conventions;
         }
         
-        public string Name { get; protected set; }
-        public string DbName { get; protected set; }
+        public string Name { get; internal set; }
+        public string DbName { get; internal set; }
         public Type ControllerType { get; protected set; }
         
-        public Schema Schema { get; protected set; }
-        public Column[] Columns { get; protected set; }
-        public Column[] KeyColumns { get; protected internal set; }
-        public LinkRef[] LinkRefs { get; protected set; }
+        public Schema Schema { get; internal set; }
+        public Column[] Columns { get; internal set; }
+        public Column[] KeyColumns { get; internal set; }
+        public LinkRef[] LinkRefs { get; internal set; }
 
         public void SetKey(params Column[] keyColumns)
         {
@@ -28,7 +28,7 @@ namespace Pagan
         }
         
         internal ITableFactory Factory;
-        internal ITableConfiguration Configuration;
+        internal ITableConventions Conventions;
 
         public LinkRef GetLinkRef(Type type)
         {

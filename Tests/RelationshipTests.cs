@@ -18,45 +18,19 @@ namespace Pagan.Tests
     [TestFixture]
     public class RelationshipTests
     {
-        private Mock<ITableConfiguration> _mockConfig;
-        private ITableFactory _factory;
+        private FakeConventions _conventions;
+        private FakeTableFactory _factory;
 
         [SetUp]
         public void Setup()
         {
-
-            _mockConfig = new Mock<ITableConfiguration>();
-
-            _mockConfig
-                .Setup(x => x.GetDefaultSchemaName()).Returns("dbo");
-
-            _mockConfig
-                .Setup(x => x.SetDefaultColumnDbName(It.IsAny<Column>()))
-                .Callback((Column c) => c.DbName = c.Name);
-
-            _mockConfig
-                .Setup(x => x.SetDefaultPrimaryKey(It.IsAny<Table>()))
-                .Callback((Table t) =>
-                {
-                    var id = t.Columns.First(x => x.Name == "Id");
-                    id.Table.SetKey(id);
-                });
-
-            _mockConfig
-                .Setup(x => x.SetDefaultForeignKey(It.IsAny<IDependent>(), It.IsAny<Column[]>()))
-                .Callback((IDependent d, IEnumerable<Column> c) =>
-                {
-                    var supplierId = c.First(x => x.Name == "SupplierId");
-                    d.SetForeignKey(supplierId);
-                });
-
-
-            _factory = new FakeTableFactory(_mockConfig.Object);
+            _conventions = new FakeConventions();
+            _factory = new FakeTableFactory(_conventions);
         }
 
         /// <summary>
         /// Test the relationship from our fake OrderDetail dependent to its Product principal.
-        /// Since OrderDetail explicitly configures the foreign key fields, we won't expect the configuration to be called.
+        /// Since OrderDetail explicitly configures the foreign key fields, we won't expect the conventions to be called.
         /// </summary>
         [Test]
         public void ExplicitlyConfiguredForeignKeyDoesNotUseConventions()
@@ -64,12 +38,12 @@ namespace Pagan.Tests
             var orderDetail = _factory.GetTable<OrderDetail>().Controller;
             
             orderDetail.Product.Query();
-            _mockConfig.Verify(x => x.SetDefaultForeignKey(It.IsAny<IDependent>(), It.IsAny<Column[]>()), Times.Never);
+            _conventions.Mock.Verify(x => x.SetDefaultForeignKey(It.IsAny<IDependent>(), It.IsAny<Column[]>()), Times.Never);
         }
 
         /// <summary>
         /// Test the relationship from our fake Supplier principal to its Products dependent.
-        /// Since Product leaves foreign key selection to convention, expect the configuration to be called
+        /// Since Product leaves foreign key selection to convention, expect the conventions to be called
         /// </summary>
         [Test]
         public void UnconfiguredForeignKeyUsesConventions()
@@ -77,7 +51,7 @@ namespace Pagan.Tests
             var supplier = _factory.GetTable<Supplier>().Controller;
             
             supplier.Products.Query();
-            _mockConfig.Verify(x => x.SetDefaultForeignKey(It.IsAny<IDependent>(), It.IsAny<Column[]>()), Times.Once);
+            _conventions.Mock.Verify(x => x.SetDefaultForeignKey(It.IsAny<IDependent>(), It.IsAny<Column[]>()), Times.Once);
         }
     }
 }

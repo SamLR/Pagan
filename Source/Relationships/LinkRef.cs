@@ -20,7 +20,7 @@ namespace Pagan.Relationships
             
             if (dependent.HasForeignKey()) return;
 
-            Table.Configuration.SetDefaultForeignKey(dependent, Table.Columns);
+            Table.Conventions.SetDefaultForeignKey(dependent, Table.Columns);
 
             if (!dependent.HasForeignKey())
                 throw ConfigurationError.MissingForeignKey(Table.ControllerType);
