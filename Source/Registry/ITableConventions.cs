@@ -8,6 +8,6 @@ namespace Pagan.Registry
         string GetTableDbName(Table table);
         string GetColumnDbName(Column column);
         Column[] GetPrimaryKey(Table table);
-        void SetDefaultForeignKey(IDependent dependent, Column[] columns);
+        Column[] GetForeignKey(Table principalTable, Table dependentTable);
     }
 }

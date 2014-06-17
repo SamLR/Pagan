@@ -12,6 +12,13 @@
         public IDependent GetDependent()
         {
             return (IDependent) GetPartnerRef();
-        } 
+        }
+
+        protected override Relationship GetRelationship()
+        {
+            var dependent = GetDependent();
+            EnsureForeignKey(this, dependent);
+            return new Relationship(this, dependent, Role.Dependent);
+        }
     }
 }

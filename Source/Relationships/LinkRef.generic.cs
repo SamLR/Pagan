@@ -1,5 +1,6 @@
 ﻿using System;
 using Pagan.Queries;
+using Pagan.Registry;
 
 namespace Pagan.Relationships
 {
@@ -20,20 +21,8 @@ namespace Pagan.Relationships
             return GetPartnerTable().GetLinkRef(Table.ControllerType);
         }
 
-        protected Relationship GetRelationship()
-        {
-            var linkRef = GetPartnerRef();
-
-            var dependent = linkRef as IDependent;
-            if (dependent != null)
-            {
-                linkRef.EnsureForeignKey();
-                return new Relationship((IPrincipal) this, dependent, Role.Dependent);
-            }
-
-            EnsureForeignKey();
-            return new Relationship((IPrincipal) linkRef, (IDependent) this, Role.Principal);
-        }
+        // implemented by ChildRef and ParentRef
+        protected abstract Relationship GetRelationship();
 
         public Query Query()
         {

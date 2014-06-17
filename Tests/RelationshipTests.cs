@@ -1,9 +1,5 @@
-using System.Collections.Generic;
-using System.Linq;
 using Moq;
 using NUnit.Framework;
-using Pagan.Registry;
-using Pagan.Relationships;
 using Pagan.Tests.Fakes;
 using Pagan.Tests.TestControllers;
 
@@ -38,7 +34,7 @@ namespace Pagan.Tests
             var orderDetail = _factory.GetTable<OrderDetail>().Controller;
             
             orderDetail.Product.Query();
-            _conventions.Mock.Verify(x => x.SetDefaultForeignKey(It.IsAny<IDependent>(), It.IsAny<Column[]>()), Times.Never);
+            _conventions.Mock.Verify(x => x.GetForeignKey(It.IsAny<Table>(), It.IsAny<Table>()), Times.Never);
         }
 
         /// <summary>
@@ -51,7 +47,7 @@ namespace Pagan.Tests
             var supplier = _factory.GetTable<Supplier>().Controller;
             
             supplier.Products.Query();
-            _conventions.Mock.Verify(x => x.SetDefaultForeignKey(It.IsAny<IDependent>(), It.IsAny<Column[]>()), Times.Once);
+            _conventions.Mock.Verify(x => x.GetForeignKey(It.IsAny<Table>(), It.IsAny<Table>()), Times.Once);
         }
     }
 }

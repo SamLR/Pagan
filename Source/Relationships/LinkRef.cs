@@ -12,20 +12,18 @@ namespace Pagan.Relationships
         }
 
         protected internal Type PartnerControllerType;
-        protected internal Table Table;
 
-        protected internal void EnsureForeignKey()
+        protected void EnsureForeignKey(IPrincipal principal, IDependent dependent)
         {
-            var dependent = (IDependent)this;
-            
             if (dependent.HasForeignKey()) return;
 
-            Table.Conventions.SetDefaultForeignKey(dependent, Table.Columns);
+            dependent.SetForeignKey(Table.Conventions.GetForeignKey(principal.Table, dependent.Table));
 
             if (!dependent.HasForeignKey())
-                throw ConfigurationError.MissingForeignKey(Table.ControllerType);
+                throw ConfigurationError.MissingForeignKey(dependent.Table.ControllerType);
         }
 
+        public Table Table { get; private set; }
         public string Name { get; protected set; }
     }
 }

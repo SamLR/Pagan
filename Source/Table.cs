@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Pagan.Registry;
 using Pagan.Relationships;
 
@@ -29,16 +28,5 @@ namespace Pagan
         
         internal ITableFactory Factory;
         internal ITableConventions Conventions;
-
-        public LinkRef GetLinkRef(Type type)
-        {
-            return LinkRefs.First(r => r.PartnerControllerType == type);
-        }
-
-        public bool TryGetColumn(string name, out Column column)
-        {
-            column = Columns.FirstOrDefault(c => String.Equals(c.Name, name, StringComparison.InvariantCultureIgnoreCase));
-            return !ReferenceEquals(null, column);
-        }
     }
 }

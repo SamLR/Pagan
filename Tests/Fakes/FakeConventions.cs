@@ -1,5 +1,7 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using Moq;
 using Pagan.Registry;
 using Pagan.Relationships;
@@ -27,15 +29,12 @@ namespace Pagan.Tests.Fakes
 
             Mock
                 .Setup(x => x.GetPrimaryKey(It.IsAny<Table>()))
-                .Returns((Table t) => new[] { t.Columns.First(x => x.Name == "Id") });
+                .Returns((Table t) => new[] {t.Columns.First(x => x.Name == "Id")});
 
             Mock
-                .Setup(x => x.SetDefaultForeignKey(It.IsAny<IDependent>(), It.IsAny<Column[]>()))
-                .Callback((IDependent d, IEnumerable<Column> c) =>
-                {
-                    var supplierId = c.First(x => x.Name == "SupplierId");
-                    d.SetForeignKey(supplierId);
-                });
+                .Setup(x => x.GetForeignKey(It.IsAny<Table>(), It.IsAny<Table>()))
+                .Returns((Table p, Table d) => new[] {d.Columns.First(x => x.Name == p.ControllerType.Name + "Id")});
+
         }
 
         public string GetSchemaDbName(Table table)
@@ -58,9 +57,9 @@ namespace Pagan.Tests.Fakes
             return Mock.Object.GetPrimaryKey(table);
         }
 
-        public void SetDefaultForeignKey(IDependent dependent, Column[] columns)
+        public Column[] GetForeignKey(Table principalTable, Table dependentTable)
         {
-            Mock.Object.SetDefaultForeignKey(dependent, columns);
+            return Mock.Object.GetForeignKey(principalTable, dependentTable);
         }
     }
 }
