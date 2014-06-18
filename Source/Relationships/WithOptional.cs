@@ -1,6 +1,4 @@
-﻿using Pagan.Registry;
-
-namespace Pagan.Relationships
+﻿namespace Pagan.Relationships
 {
     public class WithOptional<T> : ParentRef<T>
     {

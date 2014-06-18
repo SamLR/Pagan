@@ -43,5 +43,22 @@ namespace Pagan.Registry
                 "No foreign key was explicitly defined or could be inferred on the Table class {0}",
                 controllerType);
         }
+
+        internal static ConfigurationError MissingAdoProvider(string providerName)
+        {
+            return new ConfigurationError(
+                "MissingADOProvider",
+                "No ADO provider type was registered for the provider with name {0}",
+                providerName);
+
+        }
+
+        internal static ConfigurationError MissingDbAdapter(string providerName)
+        {
+            return new ConfigurationError(
+                "MissingDbAdapter",
+                "No Pagan Db Adapter was registered for the provider with name {0}",
+                providerName);
+        }
     }
 }

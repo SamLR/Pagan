@@ -1,6 +1,4 @@
-﻿using Pagan.Registry;
-
-namespace Pagan
+﻿namespace Pagan
 {
     public class Schema
     {

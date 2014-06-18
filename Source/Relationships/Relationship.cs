@@ -1,4 +1,5 @@
-﻿using Pagan.Queries;
+﻿using System.Linq;
+using Pagan.Queries;
 
 namespace Pagan.Relationships
 {
@@ -9,6 +10,7 @@ namespace Pagan.Relationships
             Principal = principal;
             Dependent = dependent;
             Role = role;
+            Name = Role == Role.Dependent ? Principal.Name : Dependent.Name;
             JoinExpression = CreateJoinExpression(principal.PrimaryKeyColumns, dependent.ForeignKeyColumns);
         }
 
@@ -16,11 +18,19 @@ namespace Pagan.Relationships
         public IPrincipal Principal { get; private set; }
         public FilterExpression JoinExpression { get; private set; }
         public Role Role { get; private set; }
+        public string Name { get; private set; }
 
         private static FilterExpression CreateJoinExpression(Column[] primaryKey, Column[] foreignKey)
         {
-            //todo: Create join expression
-            return new FilterExpression();
+            return primaryKey.Select(
+                (t, i) =>
+                    new FilterExpression(t, foreignKey[i],
+                        Operators.Equal))
+                .Aggregate(null,
+                    (FilterExpression current, FilterExpression item) =>
+                        current == null
+                            ? item
+                            : new FilterExpression(current, item, Operators.And));
         }
     }
 }

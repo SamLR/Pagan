@@ -1,9 +1,7 @@
 ﻿namespace Pagan.Relationships
 {
-    public interface IPrincipal
+    public interface IPrincipal: ILinkRef
     {
-        Table Table { get; }
-        string Name { get; }
         IDependent GetDependent();
 
         bool ManyDependents { get; }

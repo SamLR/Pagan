@@ -31,6 +31,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -40,10 +41,26 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Column.cs" />
+    <Compile Include="Database.cs" />
     <Compile Include="DbNameAttribute.cs" />
+    <Compile Include="Queries\IQuery.cs" />
+    <Compile Include="Queries\IQueryBuilder.cs" />
+    <Compile Include="Queries\IQuerySource.cs" />
+    <Compile Include="Queries\QueryEntity.cs" />
+    <Compile Include="Queries\QueryMultiResult.cs" />
+    <Compile Include="Queries\ExecutionError.cs" />
     <Compile Include="Queries\FilterExpression.cs" />
+    <Compile Include="Queries\Operators.cs" />
     <Compile Include="Queries\Query.cs" />
+    <Compile Include="Queries\QueryColumn.cs" />
+    <Compile Include="Queries\QueryResult.cs" />
+    <Compile Include="Queries\SortDirection.cs" />
+    <Compile Include="Queries\SortingColumn.cs" />
     <Compile Include="Registry\ConfigurationError.cs" />
+    <Compile Include="Adapters\IQueryAdapter.cs" />
+    <Compile Include="Registry\Settings.cs" />
+    <Compile Include="Adapters\SqlQueryAdapter.cs" />
+    <Compile Include="Relationships\ILinkRef.cs" />
     <Compile Include="Relationships\Role.cs" />
     <Compile Include="Table.cs" />
     <Compile Include="Schema.cs" />

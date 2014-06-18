@@ -6,15 +6,18 @@
         {          
         }
 
-        public bool OptionalParent { get; protected set; }
-        public Column[] ForeignKeyColumns { get; private set; }
-        public void SetForeignKey(params Column[] fkColumns)
-        {
-            ForeignKeyColumns = fkColumns;
-        }
         public IPrincipal GetPrincipal()
         {
             return (IPrincipal) GetPartnerRef();
+        }
+
+        public bool OptionalParent { get; protected set; }
+
+        public Column[] ForeignKeyColumns { get; private set; }
+
+        public void SetForeignKey(params Column[] fkColumns)
+        {
+            ForeignKeyColumns = fkColumns;
         }
 
         protected override Relationship GetRelationship()

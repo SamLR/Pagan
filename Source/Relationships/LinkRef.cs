@@ -3,7 +3,7 @@ using Pagan.Registry;
 
 namespace Pagan.Relationships
 {
-    public abstract class LinkRef
+    public abstract class LinkRef: ILinkRef
     {
         protected LinkRef(Table table, string name)
         {

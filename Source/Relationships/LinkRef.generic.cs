@@ -1,6 +1,5 @@
 ﻿using System;
 using Pagan.Queries;
-using Pagan.Registry;
 
 namespace Pagan.Relationships
 {

@@ -1,6 +1,4 @@
-﻿using Pagan.Registry;
-
-namespace Pagan.Relationships
+﻿namespace Pagan.Relationships
 {
     public class WithOne<T> : ParentRef<T>
     {

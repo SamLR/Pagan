@@ -4,15 +4,17 @@
     {
         protected ChildRef(Table table, string name) : base(table, name)
         {
-            PrimaryKeyColumns = Table.KeyColumns;
+        }
+
+        public IDependent GetDependent()
+        {
+            return (IDependent)GetPartnerRef();
         }
 
         public bool ManyDependents { get; protected set; }
-        public Column[] PrimaryKeyColumns { get; private set; }
-        public IDependent GetDependent()
-        {
-            return (IDependent) GetPartnerRef();
-        }
+
+        public Column[] PrimaryKeyColumns { get { return Table.KeyColumns; } }
+
 
         protected override Relationship GetRelationship()
         {
