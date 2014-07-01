@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pagan.Queries
+namespace Pagan.Results
 {
     public class ExecutionError: Exception
     {

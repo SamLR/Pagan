@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="Fakes\FakeConventions.cs" />
     <Compile Include="Fakes\FakeTableFactory.cs" />
+    <Compile Include="StraightThru.cs" />
     <Compile Include="TestControllers\Order.cs" />
     <Compile Include="GeneralConfigurationTests.cs" />
     <Compile Include="ImplicitConfigurationTests.cs" />
@@ -59,8 +60,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RelationshipTests.cs" />
     <Compile Include="TestControllers\Supplier.cs" />
+    <Compile Include="Touchpoints\Country.cs" />
+    <Compile Include="Touchpoints\Region.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

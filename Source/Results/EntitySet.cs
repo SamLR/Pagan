@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using Pagan.Queries;
 
-namespace Pagan.Queries
+namespace Pagan.Results
 {
-    public class QueryResult
+    public class EntitySet
     {
-        public QueryResult(string name, IEnumerable<QueryColumn> columns, IEnumerable<Query> children)
+        public EntitySet(string name, IEnumerable<QueryColumn> columns, IEnumerable<Query> children)
         {
             Name = name;
             Columns = columns;
@@ -15,13 +16,13 @@ namespace Pagan.Queries
 
         protected readonly IEnumerable<QueryColumn> Columns;
         protected readonly IEnumerable<Query> Children;
-        protected QueryEntity Current;
+        protected Entity Current;
         protected bool Changed;
 
         public string Name { get; private set; }
 
-        public virtual bool IsNull { get { return ReferenceEquals(null, Current); } }
-        
+        public virtual bool IsNull{ get { return Current == null; } }
+
         public void Read(IDataRecord data)
         {
             var entity = CreateEntity();
@@ -36,45 +37,45 @@ namespace Pagan.Queries
             if (entity.Equals(Current))
             {
                 OnRepeatEntity(entity);
-                entity.ReadChildren(data);
+                Current.ReadChildren(data);
                 return;
             }
 
-            OnNewEntity(entity, data);
+            OnNewEntity(ref entity, data);
             entity.ReadChildren(data);
 
         }
 
-        protected virtual void OnNullEntity(QueryEntity entity)
+        protected virtual void OnNullEntity(Entity entity)
         {
-            Changed = !ReferenceEquals(Current, null);
+            Changed = Current != null;
             Current = null;
         }
 
-        protected virtual void OnRepeatEntity(QueryEntity entity)
+        protected virtual void OnRepeatEntity(Entity entity)
         {
             Changed = false;
         }
 
-        protected virtual void OnNewEntity(QueryEntity entity, IDataRecord data)
+        protected virtual void OnNewEntity(ref Entity entity, IDataRecord data)
         {
             entity.ReadFields(data);
             Changed = true;
             Current = entity;
         }
 
-        private QueryEntity CreateEntity()
+        private Entity CreateEntity()
         {
-            return new QueryEntity(
-                Columns.Where(c => c.IsKey),
-                Columns.Where(c => !c.IsKey),
-                Children.Select(x => x.CreateQueryResult())
+            return new Entity(
+                Columns.Where(c => c.Column.IsKey).Select(c=> c.CreateField()),
+                Columns.Where(c => !c.Column.IsKey).Select(c => c.CreateField()),
+                Children.Select(x => x.CreateEntitySet())
                 );
         }
 
         public virtual object GetValue()
         {
-            return ReferenceEquals(null, Current) ? null : Current.GetValue();
+            return Current == null ? null : Current.GetValue();
         }
 
         public IEnumerable<dynamic> Spool(IDataReader data)
@@ -86,9 +87,10 @@ namespace Pagan.Queries
                 Read(data);
 
                 if (Changed && !ReferenceEquals(null, previous))
-                    yield return previous;
+                    yield return previous.GetValue();
             }
-            yield return Current;
+
+            yield return Current.GetValue();
         }
     }
 }

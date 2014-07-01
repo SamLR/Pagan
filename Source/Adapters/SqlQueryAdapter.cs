@@ -4,14 +4,16 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Text;
+using Pagan.Commands;
 using Pagan.Queries;
+using CommandType = System.Data.CommandType;
 
 namespace Pagan.Adapters
 {
     public class SqlQueryAdapter : IQueryAdapter
     {
         private const string TableFormat = "[{0}].[{1}]";
-        private const string ColumnFormat = "[{0}].[{1}]";
+        private const string ColumnFormat = "{0}.[{1}]";
         private const string SortedColumnFormat = "{0} {1}";
         private const string JoinFormat = "{0} {1} ON {2}";
         private const string BinaryFormat = "{0} {1} {2}";
@@ -19,7 +21,7 @@ namespace Pagan.Adapters
         private Query _query;
         private IDictionary<string, object> _queryArgs;
 
-        public DbCommand GetCommand(Query query, DbConnection connection)
+        public void TranslateQuery(Query query, DbCommand dbCommand)
         {
             _query = query;
             _queryArgs = new Dictionary<string, object>();
@@ -29,15 +31,17 @@ namespace Pagan.Adapters
             TranslateWhereClause();
             TranslateOrderByClause();
 
-            var cmd = connection.CreateCommand();
-            cmd.CommandText = CreateSql();
-            cmd.CommandType = CommandType.Text;
-            cmd.CommandTimeout = 0;
-            CreateDbParameters(cmd);
-
-            return cmd;
+            dbCommand.CommandText = CreateSql();
+            dbCommand.CommandType = CommandType.Text;
+            dbCommand.CommandTimeout = 0;
+            CreateDbParameters(dbCommand);
         }
-        
+
+        public void TranslateCommand(Command paganCommand, DbCommand dbCommand)
+        {
+            throw new NotImplementedException();
+        }
+
         public string Select { get; private set; }
         public string From { get; private set; }
         public string OrderBy { get; private set; }
@@ -97,7 +101,7 @@ namespace Pagan.Adapters
 
         private static string TranslateTable(Table table)
         {
-            return string.Format(TableFormat, table.Schema, table.Name);
+            return string.Format(TableFormat, table.Schema.DbName, table.DbName);
         }
 
         private static string TranslateColumn(Column column)

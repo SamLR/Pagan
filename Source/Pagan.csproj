@@ -41,19 +41,23 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Column.cs" />
+    <Compile Include="Commands\Command.cs" />
+    <Compile Include="Commands\CommandColumn.cs" />
+    <Compile Include="Commands\CommandType.cs" />
     <Compile Include="Database.cs" />
     <Compile Include="DbNameAttribute.cs" />
+    <Compile Include="Results\EntityField.cs" />
     <Compile Include="Queries\IQuery.cs" />
     <Compile Include="Queries\IQueryBuilder.cs" />
     <Compile Include="Queries\IQuerySource.cs" />
-    <Compile Include="Queries\QueryEntity.cs" />
-    <Compile Include="Queries\QueryMultiResult.cs" />
-    <Compile Include="Queries\ExecutionError.cs" />
+    <Compile Include="Results\Entity.cs" />
+    <Compile Include="Results\EntityMultiSet.cs" />
+    <Compile Include="Results\ExecutionError.cs" />
     <Compile Include="Queries\FilterExpression.cs" />
     <Compile Include="Queries\Operators.cs" />
     <Compile Include="Queries\Query.cs" />
     <Compile Include="Queries\QueryColumn.cs" />
-    <Compile Include="Queries\QueryResult.cs" />
+    <Compile Include="Results\EntitySet.cs" />
     <Compile Include="Queries\SortDirection.cs" />
     <Compile Include="Queries\SortingColumn.cs" />
     <Compile Include="Registry\ConfigurationError.cs" />

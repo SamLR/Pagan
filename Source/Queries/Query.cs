@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Pagan.Relationships;
+using Pagan.Results;
 
 namespace Pagan.Queries
 {
@@ -26,7 +27,8 @@ namespace Pagan.Queries
         {
             Table = table;
             _childQueries = new List<Query>();
-            Select();
+
+            Select(table.Columns.Select(c => (QueryColumn) c).ToArray());
             OrderBy();
         }
 
@@ -54,7 +56,7 @@ namespace Pagan.Queries
 
         public Query Select(params QueryColumn[] selected)
         {
-            var keyParts = Table.KeyColumns.Select(x => new QueryColumn(x, true));
+            var keyParts = Table.KeyColumns.Select(x => new QueryColumn(x));
 
             _participants = (selected.Length == 0
                 ? keyParts
@@ -91,7 +93,7 @@ namespace Pagan.Queries
             return _childQueries.Aggregate(offset + _participants.Length, (a, q) => q.CalculateColumnPositions(a));
         }
 
-        internal QueryResult CreateQueryResult()
+        internal EntitySet CreateEntitySet()
         {
             var isChild = Relationship != null;
 
@@ -102,8 +104,8 @@ namespace Pagan.Queries
                         && Relationship.Principal.ManyDependents;
 
             return multi
-                ? new QueryMultiResult(Name, _participants, _childQueries)
-                : new QueryResult(Name, _participants, _childQueries);
+                ? new EntityMultiSet(Name, _participants, _childQueries)
+                : new EntitySet(Name, _participants, _childQueries);
         }
 
     }

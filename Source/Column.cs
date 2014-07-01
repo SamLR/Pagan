@@ -48,6 +48,7 @@ namespace Pagan
         public Table Table { get; private set; }
         public string Name { get; private set; }
         public string DbName { get; set; }
+        public bool IsKey { get; internal set; }
 
         public FilterExpression Like(string pattern)
         {

@@ -13,18 +13,22 @@ namespace Pagan.Registry
 
         static Settings()
         {
-            Adapters = new Dictionary<string, IQueryAdapter>();
-            RegisterQueryAdapter<SqlQueryAdapter>(SqlProvider);
+            Adapters = new Dictionary<string, IQueryAdapter>
+            {
+                {SqlProvider.ToLowerInvariant(), new SqlQueryAdapter()}
+            };
 
-            Conventions = new Dictionary<string, ITableConventions>();
-            RegisterTableConventions<TableConventions>(String.Empty); // default ITableConventions provider
+            Conventions = new Dictionary<string, ITableConventions>
+            {
+                {String.Empty, new TableConventions()}
+            };
         }
 
-        public static void RegisterQueryAdapter<T>(string provider) where T:IQueryAdapter
+        public static void RegisterQueryAdapter(string provider, IQueryAdapter adapter)
         {
             if (provider == null) throw new ArgumentNullException("provider");
 
-            Adapters[provider.ToLowerInvariant()] = Activator.CreateInstance<T>();
+            Adapters[provider.ToLowerInvariant()] = adapter;
         }
 
         public static IQueryAdapter GetAdapter(string provider)
@@ -39,11 +43,11 @@ namespace Pagan.Registry
             return adapter;
         }
 
-        public static void RegisterTableConventions<T>(string database) where T:ITableConventions
+        public static void RegisterTableConventions(string database, ITableConventions conventions)
         {
             if (String.IsNullOrEmpty(database)) throw new ArgumentNullException("database");
 
-            Conventions[database.ToLowerInvariant()] = Activator.CreateInstance<T>();
+            Conventions[database.ToLowerInvariant()] = conventions;
         }
 
         public static ITableConventions GetConventions(string database)

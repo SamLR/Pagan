@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
+using Pagan.Results;
 
 namespace Pagan.Queries
 {
@@ -11,10 +11,10 @@ namespace Pagan.Queries
         public bool Equals(QueryColumn other)
         {
             if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            return EqualityComparer<Column>.Default.Equals(Column, other.Column) 
-                && Equals(Value, other.Value);
+            return ReferenceEquals(this, other) 
+                || EqualityComparer<Column>.Default.Equals(Column, other.Column);
         }
+
         public override bool Equals(object obj)
         {
             var field = obj as QueryColumn;
@@ -27,40 +27,28 @@ namespace Pagan.Queries
             unchecked
             {
                 var hashCode = (Column != null ? Column.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ Position.GetHashCode();
-                hashCode = (hashCode*397) ^ IsKey.GetHashCode();
-                hashCode = (hashCode*397) ^ (Value != null ? Value.GetHashCode() : 0);
                 return hashCode;
             }
         }
 
         #endregion
 
-        public QueryColumn(Column column, bool isKey)
+        public static implicit operator QueryColumn(Column c)
+        {
+            return new QueryColumn(c);
+        }
+
+        public QueryColumn(Column column)
         {
             Column = column;
-            IsKey = isKey;
         }
 
         public Column Column { get; private set; }
-        public bool IsKey { get; private set; }
         public int Position { get; internal set; }
 
-        #region Implementation of IDataNode
-
-        public string Name { get { return Column.Name; } }
-
-        public bool IsNull { get { return ReferenceEquals(null, Value); } }
-
-        public void Read(IDataRecord data)
+        public EntityField CreateField()
         {
-            Value = data.IsDBNull(Position)
-                ? null
-                : data.GetValue(Position);
+            return new EntityField(Column.Name, Position);
         }
-
-        public object Value { get; private set; }
-
-        #endregion
     }
 }

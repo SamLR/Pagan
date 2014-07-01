@@ -4,21 +4,23 @@ using System.Data;
 using System.Dynamic;
 using System.Linq;
 
-namespace Pagan.Queries
+namespace Pagan.Results
 {
-    public class QueryEntity : IEquatable<QueryEntity>
+    public class Entity : IEquatable<Entity>
     {
         #region Equality
         
-        public bool Equals(QueryEntity other)
+        public bool Equals(Entity other)
         {
             if (ReferenceEquals(null, other)) return false;
-            return ReferenceEquals(this, other) || _keys.Equals(other._keys);
+            if (ReferenceEquals(this, other)) return true;
+            if (_keys.Count != other._keys.Count) return false;
+            return _keys.Select((k, i) => k.Equals(other._keys[i])).All(x => x);
         }
 
         public override bool Equals(object obj)
         {
-            var en = obj as QueryEntity;
+            var en = obj as Entity;
             if (ReferenceEquals(null, en)) return false;
             return ReferenceEquals(this, en) || Equals(en);
         }
@@ -29,15 +31,15 @@ namespace Pagan.Queries
 
         #endregion
 
-        private readonly List<QueryColumn> _keys;
-        private readonly List<QueryColumn> _fields;
-        private readonly List<QueryResult> _children;
+        private readonly List<EntityField> _keys;
+        private readonly List<EntityField> _fields;
+        private readonly List<EntitySet> _children;
 
-        public QueryEntity(IEnumerable<QueryColumn> keys, IEnumerable<QueryColumn> fields, IEnumerable<QueryResult> children)
+        public Entity(IEnumerable<EntityField> keys, IEnumerable<EntityField> fields, IEnumerable<EntitySet> children)
         {
-            _keys = keys == null ? new List<QueryColumn>() : new List<QueryColumn>(keys);
-            _fields = fields == null ? new List<QueryColumn>() : new List<QueryColumn>(fields);
-            _children = children == null ? new List<QueryResult>() : new List<QueryResult>(children);
+            _keys = keys == null ? new List<EntityField>() : new List<EntityField>(keys);
+            _fields = fields == null ? new List<EntityField>() : new List<EntityField>(fields);
+            _children = children == null ? new List<EntitySet>() : new List<EntitySet>(children);
         }
 
         public bool IsNull { get { return _keys.Any(k => k.IsNull); } }

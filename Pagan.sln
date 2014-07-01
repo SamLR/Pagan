@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30501.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pagan", "Source\Pagan.csproj", "{D5F4835E-63EB-4FDB-979E-AAB10752DAF4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pagan.Tests", "Tests\Pagan.Tests.csproj", "{DF96E77B-98C9-4633-AF71-2D21EA0D3C40}"

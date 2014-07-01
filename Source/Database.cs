@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.Common;
+using System.Net.Mail;
 using Pagan.Adapters;
 using Pagan.Queries;
 using Pagan.Registry;
@@ -43,6 +44,14 @@ namespace Pagan
             return connection;
         }
 
+        private DbCommand GetDbCommand()
+        {
+            var cmd = _connection.CreateCommand();
+            cmd.CommandType = CommandType.Text;
+            cmd.CommandTimeout = 0;
+            return cmd;
+        }
+
         private DbDataReader ExecuteQuery(DbCommand cmd)
         {
             if (_connection.State == ConnectionState.Closed)
@@ -54,9 +63,10 @@ namespace Pagan
         public IEnumerable<dynamic> Query<T>(Func<T, Query> action)
         {
             var query = action(_factory.GetTable<T>().Controller);
-            var cmd = _adapter.GetCommand(query, _connection);
+            var cmd = GetDbCommand();
+            _adapter.TranslateQuery(query, cmd);
             var reader = ExecuteQuery(cmd);
-            return query.CreateQueryResult().Spool(reader);
+            return query.CreateEntitySet().Spool(reader);
         }
 
         

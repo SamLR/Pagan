@@ -1,10 +1,12 @@
 ﻿using System.Data.Common;
+using Pagan.Commands;
 using Pagan.Queries;
 
 namespace Pagan.Adapters
 {
     public interface IQueryAdapter
     {
-        DbCommand GetCommand(Query query, DbConnection connection);
+        void TranslateQuery(Query query, DbCommand dbCommand);
+        void TranslateCommand(Command paganCommand, DbCommand dbCommand);
     }
 }
