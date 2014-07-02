@@ -1,4 +1,5 @@
 ﻿using System;
+using Pagan.Queries;
 using Pagan.Registry;
 
 namespace Pagan.Relationships
@@ -23,6 +24,7 @@ namespace Pagan.Relationships
                 throw ConfigurationError.MissingForeignKey(dependent.Table.ControllerType);
         }
 
+        public abstract Query Query();
         public Table Table { get; private set; }
         public string Name { get; protected set; }
     }

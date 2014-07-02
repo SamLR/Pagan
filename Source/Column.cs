@@ -1,4 +1,5 @@
 ﻿using System;
+using Pagan.Commands;
 using Pagan.Queries;
 
 namespace Pagan
@@ -63,6 +64,11 @@ namespace Pagan
         public SortingColumn Desc()
         {
             return new SortingColumn(this, SortDirection.Descending);
+        }
+
+        public CommandColumn Is(object value)
+        {
+            return new CommandColumn(this, value);
         }
 
         #region operators

@@ -12,6 +12,11 @@ namespace Pagan.Queries
             return new Query(table);
         }
 
+        public static implicit operator Query(LinkRef link)
+        {
+            return link.Query();
+        }
+
         public static Query operator +(Query parent, Query child)
         {
             parent._childQueries.Add(child);

@@ -1,4 +1,6 @@
-﻿namespace Pagan.Commands
+﻿using Pagan.Queries;
+
+namespace Pagan.Commands
 {
     public class CommandColumn
     {
@@ -10,5 +12,6 @@
 
         public Column Column { get; private set; }
         public object Value { get; private set; }
+
     }
 }

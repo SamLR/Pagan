@@ -1,50 +1,65 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Pagan.Queries;
 
 namespace Pagan.Commands
 {
-    public class Command
+    public class Command : ICommand
     {
-        private int _keyCount;
-
-        public Command(Table table, object settings, CommandType commandType, FilterExpression filter=null)
+        public Command(Table table, CommandColumn[] columns, CommandType commandType)
         {
+            if (table == null) throw new ArgumentNullException("table");
+            if (columns == null) throw new ArgumentNullException("columns");
+
             Table = table;
 
             CommandType = commandType;
 
-            Filter = filter;
-
-            Columns = settings
-                .GetType()
-                .GetProperties()
-                .Select(p => CreateCommandColumn(p, settings));
-
-            if(_keyCount!=Table.KeyColumns.Length)
+            if (columns.Count(x => x.Column.IsKey) != Table.KeyColumns.Length)
                 throw new Exception("Not enough keys");
+            
+            Columns = CalculateColumns(columns);
+            Filter = CalculateFilter(columns);
         }
 
         public Table Table { get; private set; }
         
         public CommandType CommandType { get; private set; }
-        
+
         public IEnumerable<CommandColumn> Columns { get; private set; }
 
         public FilterExpression Filter { get; private set; }
 
-        private CommandColumn CreateCommandColumn(PropertyInfo property, object settings)
+        private IEnumerable<CommandColumn> CalculateColumns(IEnumerable<CommandColumn> columns)
         {
-            Column column;
-            
-            if(!Table.Columns.TryGetColumn(property.Name, out column))
-                throw new Exception("No such column");
+            switch (CommandType)
+            {
+                case CommandType.Delete:
+                case CommandType.Update:
+                    return columns.Where(c => !c.Column.IsKey);
 
-            if (column.IsKey) _keyCount++;
+                default:
+                    return columns;
+            }
+        }
 
-            return new CommandColumn(column, property.GetValue(settings, null));
+        private FilterExpression CalculateFilter(IEnumerable<CommandColumn> columns)
+        {
+            switch (CommandType)
+            {
+                case CommandType.Delete:
+                case CommandType.Update:
+                    return columns.Where(c=> c.Column.IsKey).Select(c => c.Column == c.Value).All();
+
+                default:
+                    return null;
+            }
+        }
+
+        public Query SelectQuery()
+        {
+            return Table.Where(Filter);
         }
     }
 }

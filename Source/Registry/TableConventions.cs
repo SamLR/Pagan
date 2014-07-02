@@ -26,7 +26,7 @@ namespace Pagan.Registry
             Column column;
 
             return
-                table.TryGetColumn(TableKeyMatchList(table), out column)
+                table.TryGetDbColumn(TableKeyMatchList(table), out column)
                     ? new[] {column}
                     : new Column[0];
         }

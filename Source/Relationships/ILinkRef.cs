@@ -1,4 +1,6 @@
-﻿namespace Pagan.Relationships
+﻿using Pagan.Queries;
+
+namespace Pagan.Relationships
 {
     public interface ILinkRef
     {

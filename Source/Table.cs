@@ -1,4 +1,5 @@
 ﻿using System;
+using Pagan.Commands;
 using Pagan.Queries;
 using Pagan.Registry;
 using Pagan.Relationships;
@@ -7,6 +8,11 @@ namespace Pagan
 {
     public abstract class Table: IQueryBuilder
     {
+        public static Query operator +(Table t, LinkRef link)
+        {
+            return (Query) t + link;
+        }
+
         protected Table(ITableFactory factory, ITableConventions conventions)
         {
             Factory = factory;
@@ -26,6 +32,22 @@ namespace Pagan
         {
             KeyColumns = keyColumns;
             KeyColumns.ForEach(c=> c.IsKey = true);
+        }
+
+
+        public Command Insert(params CommandColumn[] columns)
+        {
+            return new Command(this, columns, CommandType.Insert);
+        }
+
+        public Command Update(params CommandColumn[] columns)
+        {
+            return new Command(this, columns, CommandType.Update);
+        }
+
+        public Command Delete(params CommandColumn[] columns)
+        {
+            return new Command(this, columns, CommandType.Delete);
         }
         
         internal ITableFactory Factory;

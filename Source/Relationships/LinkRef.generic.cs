@@ -23,7 +23,7 @@ namespace Pagan.Relationships
         // implemented by ChildRef and ParentRef
         protected abstract Relationship GetRelationship();
 
-        public Query Query()
+        public override Query Query()
         {
             return new Query(GetPartnerTable()) {Relationship = GetRelationship()};
         }

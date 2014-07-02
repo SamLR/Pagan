@@ -22,15 +22,7 @@ namespace Pagan.Relationships
 
         private static FilterExpression CreateJoinExpression(Column[] primaryKey, Column[] foreignKey)
         {
-            return primaryKey.Select(
-                (t, i) =>
-                    new FilterExpression(t, foreignKey[i],
-                        Operators.Equal))
-                .Aggregate(null,
-                    (FilterExpression current, FilterExpression item) =>
-                        current == null
-                            ? item
-                            : new FilterExpression(current, item, Operators.And));
+            return primaryKey.Select((t, i) => new FilterExpression(t, foreignKey[i], Operators.Equal)).All();
         }
     }
 }

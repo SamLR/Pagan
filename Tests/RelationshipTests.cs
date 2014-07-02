@@ -6,7 +6,7 @@ using Pagan.Tests.TestControllers;
 namespace Pagan.Tests
 {
     /// <summary>
-    /// Calling Query(..) on a relationship property creates an expression mapping primary key fields from the principal
+    /// Calling Execute(..) on a relationship property creates an expression mapping primary key fields from the principal
     /// table to their foreign key counterparts on the dependent. The dependent's host Table may configure the 
     /// foreign key columns explicitly, or leave it to convention. Therefore we want to test the explicit scenario,
     /// and the various implicit ones.

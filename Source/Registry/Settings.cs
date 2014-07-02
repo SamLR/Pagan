@@ -8,14 +8,14 @@ namespace Pagan.Registry
     {
         public const string SqlProvider = "System.Data.SqlClient";
 
-        private static readonly Dictionary<string, IQueryAdapter> Adapters;
+        private static readonly Dictionary<string, IDbAdapter> Adapters;
         private static readonly Dictionary<string, ITableConventions> Conventions;
 
         static Settings()
         {
-            Adapters = new Dictionary<string, IQueryAdapter>
+            Adapters = new Dictionary<string, IDbAdapter>
             {
-                {SqlProvider.ToLowerInvariant(), new SqlQueryAdapter()}
+                {SqlProvider.ToLowerInvariant(), new SqlDbAdapter()}
             };
 
             Conventions = new Dictionary<string, ITableConventions>
@@ -24,18 +24,18 @@ namespace Pagan.Registry
             };
         }
 
-        public static void RegisterQueryAdapter(string provider, IQueryAdapter adapter)
+        public static void RegisterQueryAdapter(string provider, IDbAdapter adapter)
         {
             if (provider == null) throw new ArgumentNullException("provider");
 
             Adapters[provider.ToLowerInvariant()] = adapter;
         }
 
-        public static IQueryAdapter GetAdapter(string provider)
+        public static IDbAdapter GetAdapter(string provider)
         {
             if (provider == null) throw new ArgumentNullException("provider");
 
-            IQueryAdapter adapter;
+            IDbAdapter adapter;
 
             if (!Adapters.TryGetValue(provider.ToLowerInvariant(), out adapter))
                 throw ConfigurationError.MissingDbAdapter(provider);

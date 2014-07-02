@@ -14,7 +14,7 @@ namespace Pagan.Queries
             Operator = op;
 
             if (AndOr && (Left == null || Right == null)) // should never happen but just in case
-                throw new Exception("And/Or expressions only act on two other FilterExpressions");
+                throw new Exception("All/Or expressions only act on two other FilterExpressions");
         }
 
         internal bool AndOr

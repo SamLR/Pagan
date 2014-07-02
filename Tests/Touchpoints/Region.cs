@@ -1,4 +1,5 @@
-﻿using Pagan.Queries;
+﻿using Pagan.Commands;
+using Pagan.Queries;
 using Pagan.Relationships;
 
 namespace Pagan.Tests.Touchpoints
@@ -25,7 +26,7 @@ namespace Pagan.Tests.Touchpoints
 
         public Query FindWithCountries(int regionId)
         {
-            return Regions.Where(Id == regionId) + Countries.Query();
+            return Regions.Where(Id == regionId) + Countries;
         }
 
         public Query All()
@@ -35,7 +36,26 @@ namespace Pagan.Tests.Touchpoints
 
         public Query AllWithCountries()
         {
-            return Regions + Countries.Query();
+            return Regions + Countries;
+        }
+
+        #endregion
+
+        #region Commands
+
+        public Command Insert(int id, string name)
+        {
+            return Regions.Insert(Id.Is(id), Name.Is(name));
+        }
+
+        public Command Update(int id, string name)
+        {
+            return Regions.Update(Id.Is(id), Name.Is(name));
+        }
+
+        public Command Delete(int id)
+        {
+            return Regions.Delete(Id.Is(id));
         }
 
         #endregion

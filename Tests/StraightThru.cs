@@ -12,7 +12,7 @@ namespace Pagan.Tests
         {
             using (var db = new Database("Touchpoints"))
             {
-                var regions = db.Query<Region>(x => x.AllWithCountries());
+                var regions = db.Execute<Region>(x => x.AllWithCountries());
                 foreach (var region in regions)
                 {
                     Console.WriteLine("Id: {0}\tName: {1}", region.Id, region.Name);
@@ -28,11 +28,38 @@ namespace Pagan.Tests
         {
             using (var db = new Database("Touchpoints"))
             {
-                var regions = db.Query<Region>(x => x.All());
+                var regions = db.Execute<Region>(x => x.All());
                 foreach (var region in regions)
                 {
                     Console.WriteLine("Id: {0}\tName: {1}", region.Id, region.Name);
                 }
+            }
+        }
+
+        [Test]
+        public void UpdateRegion()
+        {
+            using (var db = new Database("Touchpoints"))
+            {
+                db.GetDbCommand<Region>(x => x.Update(1, "The Moon"));
+            }
+        }
+
+        [Test]
+        public void InsertRegion()
+        {
+            using (var db = new Database("Touchpoints"))
+            {
+                db.GetDbCommand<Region>(x => x.Insert(1, "The Moon"));
+            }
+        }
+
+        [Test]
+        public void DeleteRegion()
+        {
+            using (var db = new Database("Touchpoints"))
+            {
+                db.GetDbCommand<Region>(x => x.Delete(1));
             }
         }
     }

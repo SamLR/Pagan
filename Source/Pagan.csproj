@@ -40,10 +40,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Adapters\IDbTranslation.cs" />
+    <Compile Include="Adapters\SqlDbAdapter.cs" />
+    <Compile Include="Adapters\SqlDbTranslation.cs" />
+    <Compile Include="Adapters\SqlCommandTranslation.cs" />
     <Compile Include="Column.cs" />
     <Compile Include="Commands\Command.cs" />
     <Compile Include="Commands\CommandColumn.cs" />
     <Compile Include="Commands\CommandType.cs" />
+    <Compile Include="Commands\ICommand.cs" />
     <Compile Include="Database.cs" />
     <Compile Include="DbNameAttribute.cs" />
     <Compile Include="Results\EntityField.cs" />
@@ -61,9 +66,9 @@
     <Compile Include="Queries\SortDirection.cs" />
     <Compile Include="Queries\SortingColumn.cs" />
     <Compile Include="Registry\ConfigurationError.cs" />
-    <Compile Include="Adapters\IQueryAdapter.cs" />
+    <Compile Include="Adapters\IDbAdapter.cs" />
     <Compile Include="Registry\Settings.cs" />
-    <Compile Include="Adapters\SqlQueryAdapter.cs" />
+    <Compile Include="Adapters\SqlQueryTranslation.cs" />
     <Compile Include="Relationships\ILinkRef.cs" />
     <Compile Include="Relationships\Role.cs" />
     <Compile Include="Table.cs" />
