@@ -16,7 +16,7 @@ namespace Pagan.Relationships
 
         public IDependent Dependent { get; private set; }
         public IPrincipal Principal { get; private set; }
-        public FilterExpression JoinExpression { get; private set; }
+        public FilterExpression JoinExpression { get; internal set; }
         public Role Role { get; private set; }
         public string Name { get; private set; }
 

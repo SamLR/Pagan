@@ -89,8 +89,8 @@ namespace Pagan.Results
                 if (Changed && !ReferenceEquals(null, previous))
                     yield return previous.GetValue();
             }
-
-            yield return Current.GetValue();
+            if (!ReferenceEquals(null, Current))
+                yield return Current.GetValue();
         }
     }
 }

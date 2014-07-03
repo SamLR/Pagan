@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Pagan.Commands;
 using Pagan.Queries;
 using Pagan.Relationships;
 
@@ -26,7 +25,6 @@ namespace Pagan
         {
             return dependent.ForeignKeyColumns != null && dependent.ForeignKeyColumns.Length > 0;
         }
-
 
         public static bool HasPrimaryKey(this Table table)
         {

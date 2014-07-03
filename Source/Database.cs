@@ -80,10 +80,8 @@ namespace Pagan
         {
             var query = GetPaganQuery(action);
             using (var cmd = dbCommand ?? GetDbCommand(query))
-            {
-                var reader = ExecuteReader(cmd);
+            using (var reader = ExecuteReader(cmd))
                 return query.CreateEntitySet().Spool(reader).ToArray();
-            }
         }
 
         public int Command<T>(Func<T, Command> action, DbCommand dbCommand = null)

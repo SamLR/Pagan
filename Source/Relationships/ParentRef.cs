@@ -24,7 +24,7 @@
         {
             var principal = GetPrincipal();
             EnsureForeignKey(principal, this);
-            return new Relationship(principal, this, Role.Dependent);
+            return new Relationship(principal, this, Role.Principal);
         }
     }
 }

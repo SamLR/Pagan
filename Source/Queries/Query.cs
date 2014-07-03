@@ -19,7 +19,12 @@ namespace Pagan.Queries
 
         public static Query operator +(Query parent, Query child)
         {
+            // if the child query has a filter, include it in the join clause rather than the where clause
+            if (!ReferenceEquals(null, child.Filter))
+                child.Relationship.JoinExpression &= child.Filter;
+
             parent._childQueries.Add(child);
+
             return parent;
         }
 
@@ -34,7 +39,7 @@ namespace Pagan.Queries
             _childQueries = new List<Query>();
 
             Select(table.Columns.Select(c => (QueryColumn) c).ToArray());
-            OrderBy();
+            OrderBy(Table.KeyColumns.Select(x => x.Asc()).ToArray());
         }
 
         #region Implementation of IQuerySource
@@ -53,7 +58,17 @@ namespace Pagan.Queries
         public IEnumerable<QueryColumn> Participants { get { return _participants; } }
         public IEnumerable<SortingColumn> Sorting { get { return _sorting; } }
         public FilterExpression Filter { get { return _filter; } }
-        public IEnumerable<IQuery> JoinedQueries { get { return _childQueries; } }
+
+        public IEnumerable<IQuery> JoinedQueries
+        {
+            get
+            {
+                var queries = _childQueries.SelectMany(q => q.JoinedQueries);
+                return IsRootQuery
+                    ? queries
+                    : new[] {this}.Union(queries);
+            }
+        }
 
         #endregion
 
@@ -73,9 +88,7 @@ namespace Pagan.Queries
 
         public Query OrderBy(params SortingColumn[] sorting)
         {
-            _sorting = sorting.Length == 0 
-                ? Table.KeyColumns.Select(x => x.Asc()).ToArray() 
-                : sorting;
+            _sorting = sorting;
 
             return this;
         }
@@ -98,13 +111,16 @@ namespace Pagan.Queries
             return _childQueries.Aggregate(offset + _participants.Length, (a, q) => q.CalculateColumnPositions(a));
         }
 
+        private bool IsRootQuery
+        {
+            get { return Relationship == null; }
+        }
+
         internal EntitySet CreateEntitySet()
         {
-            var isChild = Relationship != null;
+            if (IsRootQuery) CalculateColumnPositions();
 
-            if (!isChild) CalculateColumnPositions();
-
-            var multi = isChild
+            var multi = !IsRootQuery
                         && Relationship.Role == Role.Dependent
                         && Relationship.Principal.ManyDependents;
 
