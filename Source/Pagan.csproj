@@ -71,6 +71,7 @@
     <Compile Include="Adapters\SqlQueryTranslation.cs" />
     <Compile Include="Relationships\ILinkRef.cs" />
     <Compile Include="Relationships\Role.cs" />
+    <Compile Include="Results\ReaderConverter.cs" />
     <Compile Include="Table.cs" />
     <Compile Include="Schema.cs" />
     <Compile Include="ObjectExtensions.cs" />

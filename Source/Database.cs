@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.Common;
+using System.Linq;
 using Pagan.Adapters;
 using Pagan.Commands;
 using Pagan.Queries;
 using Pagan.Registry;
+using Pagan.Results;
+using CommandType = System.Data.CommandType;
 
 namespace Pagan
 {
@@ -28,7 +31,7 @@ namespace Pagan
             _adapter = Settings.GetAdapter(providerName);
             _factory = new TableFactory(conventions ?? Settings.GetConventions(name));
             _connection = GetDbConnection(providerName, item.ConnectionString);
-            
+
         }
 
         private static DbConnection GetDbConnection(string providerName, string connectionString)
@@ -67,41 +70,92 @@ namespace Pagan
             return cmd.ExecuteScalar();
         }
 
-        private DbCommand GetDbCommand(IQuery query)
-        {
-            var cmd = _connection.CreateCommand();
-            var translation = _adapter.TranslateQuery(query);
-            translation.BuildCommand(cmd);
-            return cmd;
-        }
-
-        private DbCommand GetDbCommand(ICommand cmd)
-        {
-            var dbCommand = _connection.CreateCommand();
-            var translation = _adapter.TranslateCommand(cmd);
-            translation.BuildCommand(dbCommand);
-            return dbCommand;
-        }
-
         public DbTransaction Transaction()
         {
             EnsureConnection();
             return _connection.BeginTransaction();
         }
 
-        public IEnumerable<dynamic> Execute<T>(Func<T, Query> action)
+        public IEnumerable<dynamic> Query<T>(Func<T, Query> action, DbCommand dbCommand = null)
         {
-            var query = action(_factory.GetTable<T>().Controller);
-            var cmd = GetDbCommand(query);
-            var reader = ExecuteReader(cmd);
-            return query.CreateEntitySet().Spool(reader);
+            var query = GetPaganQuery(action);
+            using (var cmd = dbCommand ?? GetDbCommand(query))
+            {
+                var reader = ExecuteReader(cmd);
+                return query.CreateEntitySet().Spool(reader).ToArray();
+            }
         }
 
-        public int Execute<T>(Func<T, Command> action)
+        public int Command<T>(Func<T, Command> action, DbCommand dbCommand = null)
         {
-            var paganCmd = action(_factory.GetTable<T>().Controller);
-            var dbCmd = GetDbCommand(paganCmd);
-            return ExecuteNonQuery(dbCmd);
+            var paganCmd = GetPaganCommand(action);
+            using (var cmd = dbCommand ?? GetDbCommand(paganCmd))
+            {
+                return ExecuteNonQuery(cmd);
+            }
+        }
+
+        public int Sql(string sql, bool isSproc, object args = null)
+        {
+            using (var cmd = GetDbCommand(sql, isSproc, args))
+            {
+                return ExecuteNonQuery(cmd);
+            }
+        }
+
+        public IEnumerable<dynamic> SqlWithResults(string sql, bool isSproc, object args = null)
+        {
+            using (var cmd = GetDbCommand(sql, isSproc, args))
+            {
+                return ReaderConverter.ToDynamic(ExecuteReader(cmd)).ToArray();
+            }
+        }
+
+        public object SqlWithScalar(string sql, bool isSproc, object args = null)
+        {
+            using (var cmd = GetDbCommand(sql, isSproc, args))
+            {
+                return ExecuteScalar(cmd);
+            }
+        }
+
+        public DbCommand GetDbCommand(string cmdText, bool isSproc, object args)
+        {
+            if (cmdText == null) throw new ArgumentNullException("cmdText");
+
+            var cmd = _connection.CreateCommand();
+            cmd.CommandText = cmdText;
+            cmd.CommandTimeout = 0;
+            cmd.CommandType = isSproc ? CommandType.StoredProcedure : CommandType.Text;
+
+            if (args != null)
+                args.GetType().GetProperties().ForEach(p =>
+                {
+                    var name = p.Name.StartsWith("@") || p.Name.StartsWith("_")
+                        ? p.Name.Substring(1)
+                        : p.Name;
+
+                    var direction = p.Name.StartsWith("@")
+                        ? ParameterDirection.Output
+                        : p.Name.StartsWith("_")
+                            ? ParameterDirection.InputOutput
+                            : ParameterDirection.Input;
+
+                    if (String.Equals("return_value", name, StringComparison.InvariantCultureIgnoreCase) &&
+                        direction == ParameterDirection.Output)
+                    {
+                        direction = ParameterDirection.ReturnValue;
+                        name = "RETURN_VALUE";
+                    }
+
+                    var dbParameter = cmd.CreateParameter();
+                    dbParameter.ParameterName = "@" + name;
+                    dbParameter.Value = p.GetValue(args, null);
+                    dbParameter.Direction = direction;
+                    cmd.Parameters.Add(dbParameter);
+                });
+
+            return cmd;
         }
 
         public void Dispose()
@@ -119,17 +173,30 @@ namespace Pagan
             }
         }
 
-
-        internal DbCommand GetDbCommand<T>(Func<T, Command> action)
+        internal Query GetPaganQuery<T>(Func<T, Query> action)
         {
-            var cmd = action(_factory.GetTable<T>().Controller);
-            return GetDbCommand(cmd);
+            return action(_factory.GetTable<T>().Controller);
         }
 
-        internal DbCommand GetDbCommand<T>(Func<T, Query> action)
+        internal Command GetPaganCommand<T>(Func<T, Command> action)
         {
-            var qry = action(_factory.GetTable<T>().Controller);
-            return GetDbCommand(qry);
+            return action(_factory.GetTable<T>().Controller);
+        }
+
+        internal DbCommand GetDbCommand(IQuery query)
+        {
+            var cmd = _connection.CreateCommand();
+            var translation = _adapter.TranslateQuery(query);
+            translation.BuildCommand(cmd);
+            return cmd;
+        }
+
+        internal DbCommand GetDbCommand(ICommand cmd)
+        {
+            var dbCommand = _connection.CreateCommand();
+            var translation = _adapter.TranslateCommand(cmd);
+            translation.BuildCommand(dbCommand);
+            return dbCommand;
         }
     }
 }
