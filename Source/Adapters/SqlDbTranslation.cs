@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Common;
+using System.Diagnostics;
 using Pagan.Queries;
 
 namespace Pagan.Adapters
@@ -15,8 +18,31 @@ namespace Pagan.Adapters
             Parameters = new Dictionary<string, object>();
         }
 
-        public abstract string GetCommandText();
-        public IDictionary<string, object> Parameters { get; private set; }
+        public virtual void BuildCommand(IDbCommand cmd)
+        {
+            cmd.CommandText = GetCommandText();
+            cmd.CommandTimeout = 0;
+            cmd.CommandType = CommandType.Text;
+
+#if DEBUG
+            Debug.WriteLine(cmd.CommandText);
+#endif
+
+            Parameters.ForEach(x =>
+            {
+#if DEBUG
+                Debug.WriteLine(x.Key + ": " + x.Value);
+#endif
+                var p = cmd.CreateParameter();
+                p.ParameterName = x.Key;
+                p.Value = x.Value;
+                p.Direction = ParameterDirection.Input;
+                cmd.Parameters.Add(p);
+            });
+        }
+
+        protected abstract string GetCommandText();
+        protected IDictionary<string, object> Parameters;
 
         protected static string TranslateTable(Table table)
         {

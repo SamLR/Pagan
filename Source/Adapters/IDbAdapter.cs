@@ -1,5 +1,4 @@
-﻿using System.Data.Common;
-using Pagan.Commands;
+﻿using Pagan.Commands;
 using Pagan.Queries;
 
 namespace Pagan.Adapters

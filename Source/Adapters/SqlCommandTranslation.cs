@@ -20,7 +20,7 @@ namespace Pagan.Adapters
         public string Insert { get; private set; }
         public string Select { get; private set; }
 
-        public override string GetCommandText()
+        protected override string GetCommandText()
         {
             switch (_cmd.CommandType)
             {

@@ -24,7 +24,7 @@ namespace Pagan.Adapters
         public string OrderBy { get; private set; }
         public IEnumerable<string> Joins { get; private set; }
 
-        public override string GetCommandText()
+        protected override string GetCommandText()
         {
             From = TranslateFromClause();
             Where = TranslateWhereClause();
