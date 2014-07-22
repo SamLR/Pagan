@@ -33,7 +33,7 @@ namespace Pagan.Queries
         private SortingColumn[] _sorting;
         private QueryColumn[] _participants;
 
-        public Query(Table table)
+        internal Query(Table table)
         {
             Table = table;
             _childQueries = new List<Query>();

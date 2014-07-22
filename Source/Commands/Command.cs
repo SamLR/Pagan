@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Pagan.Queries;
 
@@ -7,59 +6,71 @@ namespace Pagan.Commands
 {
     public class Command : ICommand
     {
-        public Command(Table table, CommandColumn[] columns, CommandType commandType)
+        internal Command(Table table, CommandType commandType, CommandColumn[] columns)
         {
             if (table == null) throw new ArgumentNullException("table");
-            if (columns == null) throw new ArgumentNullException("columns");
 
             Table = table;
-
             CommandType = commandType;
 
-            if (columns.Count(x => x.Column.IsKey) != Table.KeyColumns.Length)
-                throw new Exception("Not enough keys");
-            
-            Columns = CalculateColumns(columns);
-            Filter = CalculateFilter(columns);
+            switch (CommandType)
+            {
+                case CommandType.Insert:
+                    if (columns == null || columns.Length == 0)
+                        throw CommandError.EmptyColumnValues(commandType, table);
+
+                    var requiredKeyCount = table.KeyColumns.Count(c => !c.DbGenerated);
+
+                    var providedKeyCount = columns.Count(c => c.Column.IsKey);
+
+                    if (providedKeyCount != requiredKeyCount)
+                        throw CommandError.InvalidNumberOfKeyValues(table, requiredKeyCount, providedKeyCount);
+
+                    Columns = columns;
+
+                    AutoId = table.KeyColumns.Any(c => c.DbGenerated);
+
+                    break;
+
+                case CommandType.Update:
+                    if (columns == null || columns.Length == 0)
+                        throw CommandError.EmptyColumnValues(commandType, table);
+
+                    if (columns.Any(c => c.Column.IsKey))
+                        throw CommandError.AttemptToAlterKeyValues(table);
+
+                    Columns = columns;
+                    break;
+
+                case CommandType.Delete:
+                    Columns = Enumerable.Empty<CommandColumn>().ToArray();
+                    break;
+            }
         }
+
+        public bool AutoId { get; private set; }
 
         public Table Table { get; private set; }
         
         public CommandType CommandType { get; private set; }
 
-        public IEnumerable<CommandColumn> Columns { get; private set; }
+        public CommandColumn[] Columns { get; private set; }
 
         public FilterExpression Filter { get; private set; }
 
-        private IEnumerable<CommandColumn> CalculateColumns(IEnumerable<CommandColumn> columns)
-        {
-            switch (CommandType)
-            {
-                case CommandType.Delete:
-                case CommandType.Update:
-                    return columns.Where(c => !c.Column.IsKey);
-
-                default:
-                    return columns;
-            }
-        }
-
-        private FilterExpression CalculateFilter(IEnumerable<CommandColumn> columns)
-        {
-            switch (CommandType)
-            {
-                case CommandType.Delete:
-                case CommandType.Update:
-                    return columns.Where(c=> c.Column.IsKey).Select(c => c.Column == c.Value).All();
-
-                default:
-                    return null;
-            }
-        }
 
         public Query SelectQuery()
         {
             return Table.Where(Filter);
+        }
+
+        public Command Where(FilterExpression filter)
+        {
+            if (CommandType == CommandType.Insert)
+                throw CommandError.FilterInsertError(Table);
+
+            Filter = filter;
+            return this;
         }
     }
 }

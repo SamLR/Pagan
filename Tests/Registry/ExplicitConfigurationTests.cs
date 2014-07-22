@@ -4,7 +4,7 @@ using Pagan.Registry;
 using Pagan.Tests.Fakes;
 using Pagan.Tests.TestControllers;
 
-namespace Pagan.Tests
+namespace Pagan.Tests.Registry
 {
     [TestFixture]
     public class ExplicitConfigurationTests
@@ -55,6 +55,7 @@ namespace Pagan.Tests
         public void DoesNotUseConventionForAttributedColumns()
         {
             Assert.AreEqual("Qty", _table.Controller.Quantity.DbName);
+            Assert.IsTrue(_table.Controller.Cost.DbGenerated);
             Assert.AreEqual("StandardCost", _table.Controller.Cost.DbName);
         }
 

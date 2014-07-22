@@ -1,4 +1,5 @@
-﻿using Pagan.Relationships;
+﻿using Pagan.Registry;
+using Pagan.Relationships;
 
 namespace Pagan.Tests.TestControllers
 {

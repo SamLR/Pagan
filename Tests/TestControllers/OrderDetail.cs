@@ -1,3 +1,4 @@
+using Pagan.Registry;
 using Pagan.Relationships;
 
 namespace Pagan.Tests.TestControllers
@@ -21,6 +22,7 @@ namespace Pagan.Tests.TestControllers
 
         [DbName("Qty")]
         public Column Quantity { get; set; }
+        [DbGenerated]
         public Column Cost { get; set; }
         public WithOne<Product> Product { get; set; }
         public WithOne<Order> Order { get; set; }

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pagan
+namespace Pagan.Registry
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple=false,Inherited=true)]
     public class DbNameAttribute : Attribute

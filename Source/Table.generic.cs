@@ -75,6 +75,7 @@ namespace Pagan
                     var column = CreateMember<Column>(property);
                     var dbName = property.GetCustomAttribute<DbNameAttribute>();
                     column.DbName = dbName != null ? dbName.Value : Conventions.GetColumnDbName(column);
+                    column.DbGenerated = property.GetCustomAttribute<DbGeneratedAttribute>() != null;
                     return column;
                 })
                 .ToArray();

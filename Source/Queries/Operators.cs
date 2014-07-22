@@ -12,11 +12,15 @@
         And = 4,
         Or = -4,
 
-        Like = 5,
-        Unlike = -5,
-        In = 6,
-        NotIn = -6,
-        IsNull = 7,
-        IsNotNull = -7
+        StartsWith = 5,
+        NotStartsWith = -5,
+        EndsWith = 6,
+        NotEndsWith = -6,
+        Contains = 7,
+        NotContains = -7,
+        In = 8,
+        NotIn = -8,
+        IsNull = 9,
+        IsNotNull = -9
     }
 }

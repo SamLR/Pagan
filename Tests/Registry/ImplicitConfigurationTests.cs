@@ -4,7 +4,7 @@ using Pagan.Registry;
 using Pagan.Tests.Fakes;
 using Pagan.Tests.TestControllers;
 
-namespace Pagan.Tests
+namespace Pagan.Tests.Registry
 {
     [TestFixture]
     public class ImplicitConfigurationTests

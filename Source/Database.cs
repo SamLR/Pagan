@@ -76,20 +76,25 @@ namespace Pagan
             return _connection.BeginTransaction();
         }
 
-        public IEnumerable<dynamic> Query<T>(Func<T, Query> action, DbCommand dbCommand = null)
+        public IEnumerable<dynamic> Query<T>(Func<T, Query> action)
         {
             var query = GetPaganQuery(action);
-            using (var cmd = dbCommand ?? GetDbCommand(query))
+            using (var cmd = GetDbCommand(query))
             using (var reader = ExecuteReader(cmd))
                 return query.CreateEntitySet().Spool(reader).ToArray();
         }
 
-        public int Command<T>(Func<T, Command> action, DbCommand dbCommand = null)
+        public int Command<T>(Func<T, Command> action)
         {
             var paganCmd = GetPaganCommand(action);
-            using (var cmd = dbCommand ?? GetDbCommand(paganCmd))
+            using (var cmd = GetDbCommand(paganCmd))
             {
-                return ExecuteNonQuery(cmd);
+                // Does this smell?
+                // We are depending on SQL from the translation of the Pagan Command returning the
+                // ID that was created on the database as a simple 1 row - 1 column dataset.
+                return paganCmd.AutoId
+                    ? (int)ExecuteScalar(cmd)
+                    : ExecuteNonQuery(cmd);
             }
         }
 

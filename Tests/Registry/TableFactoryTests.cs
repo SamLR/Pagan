@@ -3,10 +3,10 @@ using NUnit.Framework;
 using Pagan.Registry;
 using Pagan.Tests.TestControllers;
 
-namespace Pagan.Tests
+namespace Pagan.Tests.Registry
 {
     [TestFixture]
-    public class ControllerManagerTests
+    public class TableFactoryTests
     {
         private TableFactory _factory;
             

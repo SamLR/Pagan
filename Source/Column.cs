@@ -50,10 +50,21 @@ namespace Pagan
         public string Name { get; private set; }
         public string DbName { get; set; }
         public bool IsKey { get; internal set; }
+        public bool DbGenerated { get; internal set; }
 
-        public FilterExpression Like(string pattern)
+        public FilterExpression StartsWith(string pattern)
         {
-            return new FilterExpression(this, pattern, Operators.Like);
+            return new FilterExpression(this, pattern, Operators.StartsWith);
+        }
+
+        public FilterExpression EndsWith(string pattern)
+        {
+            return new FilterExpression(this, pattern, Operators.EndsWith);
+        }
+
+        public FilterExpression Contains(string pattern)
+        {
+            return new FilterExpression(this, pattern, Operators.Contains);
         }
 
         public SortingColumn Asc()
@@ -75,7 +86,7 @@ namespace Pagan
 
         public static FilterExpression operator ==(Column c, object value)
         {
-            return value == null
+            return ReferenceEquals(null, value)
                 ? new FilterExpression(c, null, Operators.IsNull)
                 : value.GetType().IsArray
                     ? new FilterExpression(c, value, Operators.In)

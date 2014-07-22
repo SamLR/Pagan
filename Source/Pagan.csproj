@@ -44,13 +44,15 @@
     <Compile Include="Adapters\SqlDbAdapter.cs" />
     <Compile Include="Adapters\SqlDbTranslation.cs" />
     <Compile Include="Adapters\SqlCommandTranslation.cs" />
+    <Compile Include="Commands\CommandError.cs" />
+    <Compile Include="Registry\DbGeneratedAttribute.cs" />
     <Compile Include="Column.cs" />
     <Compile Include="Commands\Command.cs" />
     <Compile Include="Commands\CommandColumn.cs" />
     <Compile Include="Commands\CommandType.cs" />
     <Compile Include="Commands\ICommand.cs" />
     <Compile Include="Database.cs" />
-    <Compile Include="DbNameAttribute.cs" />
+    <Compile Include="Registry\DbNameAttribute.cs" />
     <Compile Include="Results\EntityField.cs" />
     <Compile Include="Queries\IQuery.cs" />
     <Compile Include="Queries\IQueryBuilder.cs" />
@@ -92,7 +94,7 @@
     <Compile Include="Relationships\Relationship.cs" />
     <Compile Include="Relationships\WithOne.cs" />
     <Compile Include="Relationships\WithOptional.cs" />
-    <Compile Include="UseAsTableNameAttribute.cs" />
+    <Compile Include="Registry\UseAsTableNameAttribute.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

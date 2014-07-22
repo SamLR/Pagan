@@ -45,6 +45,11 @@ namespace Pagan.Adapters
             sql.Append("INSERT " + From);
             sql.AppendLine(" (" + Select + ")");
             sql.AppendLine("SELECT " + Insert);
+
+            if (_cmd.AutoId)
+            {
+                sql.Append("; SELECT CAST(SCOPE_IDENTITY() AS INTEGER) AS Auto_Id;");
+            }
             return sql.ToString();
 
         }
@@ -56,7 +61,7 @@ namespace Pagan.Adapters
 
             var sql = new StringBuilder();
             sql.AppendLine("UPDATE " + From);
-            sql.AppendLine(Update);
+            sql.AppendLine("SET " + Update);
             sql.AppendLine("WHERE " + Where);
             return sql.ToString();
         }
@@ -67,7 +72,10 @@ namespace Pagan.Adapters
 
             var sql = new StringBuilder();
             sql.AppendLine("DELETE FROM " + From);
-            sql.AppendLine("WHERE " + Where);
+
+            if(Where!=null)
+                sql.AppendLine("WHERE " + Where);
+
             return sql.ToString();
         }
 
@@ -95,7 +103,7 @@ namespace Pagan.Adapters
         }
         private string TranslateUpdateColumn(CommandColumn commandColumn)
         {
-            return String.Format("SET {0} = {1}",
+            return String.Format("{0} = {1}",
                 TranslateColumn(commandColumn.Column),
                 TranslateParameter(commandColumn.Value)
                 );

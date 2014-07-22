@@ -1,6 +1,4 @@
-﻿using Pagan.Queries;
-
-namespace Pagan.Commands
+﻿namespace Pagan.Commands
 {
     public class CommandColumn
     {

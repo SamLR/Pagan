@@ -1,8 +1,10 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Diagnostics;
+using System.Linq;
 using Pagan.Queries;
 
 namespace Pagan.Adapters
@@ -99,11 +101,15 @@ namespace Pagan.Adapters
                     op = "IS NOT";
                     break;
 
-                case Operators.Like:
+                case Operators.StartsWith:
+                case Operators.EndsWith:
+                case Operators.Contains:
                     op = "LIKE";
                     break;
 
-                case Operators.Unlike:
+                case Operators.NotStartsWith:
+                case Operators.NotEndsWith:
+                case Operators.NotContains:
                     op = "NOT LIKE";
                     break;
 
@@ -129,8 +135,17 @@ namespace Pagan.Adapters
             if (!ReferenceEquals(filter.RightColumn, null)) return TranslateColumn(filter.RightColumn);
             if (filter.Value == null) return "NULL";
             if (filter.Value is bool) return (bool)filter.Value ? "1" : "0";
-            return TranslateParameter(filter.Value);
+
+            return filter.Value.GetType().IsArray
+                ? String.Format("({0})", TranslateValueArray((IEnumerable) filter.Value))
+                : TranslateParameter(filter.Value);
         }
+
+        protected string TranslateValueArray(IEnumerable array)
+        {
+            return String.Join(", ", array.OfType<object>().Select(TranslateParameter));
+        }
+
         protected string TranslateParameter(object value)
         {
             var name = "@p" + Parameters.Count;

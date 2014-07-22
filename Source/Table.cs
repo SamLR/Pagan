@@ -37,17 +37,17 @@ namespace Pagan
 
         public Command Insert(params CommandColumn[] columns)
         {
-            return new Command(this, columns, CommandType.Insert);
+            return new Command(this, CommandType.Insert, columns);
         }
 
         public Command Update(params CommandColumn[] columns)
         {
-            return new Command(this, columns, CommandType.Update);
+            return new Command(this, CommandType.Update, columns);
         }
 
-        public Command Delete(params CommandColumn[] columns)
+        public Command Delete()
         {
-            return new Command(this, columns, CommandType.Delete);
+            return new Command(this, CommandType.Delete, null);
         }
         
         internal ITableFactory Factory;
