@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Pagan.Tests")]
-[assembly: AssemblyDescription("Pagan test suite")]
+[assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Pagan.Tests")]
-[assembly: AssemblyCopyright("Copyright ©  Pete Warner 2014")]
+[assembly: AssemblyCopyright("Copyright ©  P Warner 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("3522c95c-43ce-4f15-ab5c-90c6eb31a499")]
+[assembly: Guid("c15fa2e1-ae5b-4fe0-8f84-4324c54715d8")]
 
 // Version information for an assembly consists of the following four values:
 //

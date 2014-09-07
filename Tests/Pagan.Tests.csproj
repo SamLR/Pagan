@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{DF96E77B-98C9-4633-AF71-2D21EA0D3C40}</ProjectGuid>
+    <ProjectGuid>{E1C9BE03-A2E6-406B-A44A-40EF0E09B277}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Pagan.Tests</RootNamespace>
@@ -32,43 +32,29 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Moq">
-      <HintPath>..\packages\Moq.4.2.1402.2112\lib\net40\Moq.dll</HintPath>
-    </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Fakes\FakeConventions.cs" />
-    <Compile Include="Fakes\FakeTableFactory.cs" />
-    <Compile Include="TestControllers\Order.cs" />
-    <Compile Include="GeneralConfigurationTests.cs" />
-    <Compile Include="ImplicitConfigurationTests.cs" />
-    <Compile Include="ExplicitConfigurationTests.cs" />
-    <Compile Include="TestControllers\OrderDetail.cs" />
-    <Compile Include="TestControllers\Product.cs" />
-    <Compile Include="ControllerManagerTests.cs" />
+    <Compile Include="AdapterTests\FactoryTests.cs" />
+    <Compile Include="AdapterTests\MSSqlServerAdapterTests.cs" />
+    <Compile Include="LinqTests\QueryTests.cs" />
+    <Compile Include="MetadataTests\OrderDetail.cs" />
+    <Compile Include="MetadataTests\TableFactoryTests.cs" />
+    <Compile Include="MetadataTests\TableInfoTests.cs" />
+    <Compile Include="MetadataTests\TestTable.cs" />
+    <Compile Include="MetadataTests\TestTable2.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RelationshipTests.cs" />
-    <Compile Include="TestControllers\Supplier.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Source\Pagan.csproj">
-      <Project>{d5f4835e-63eb-4fdb-979e-aab10752daf4}</Project>
+      <Project>{5d5e08fd-be7a-4efe-b5a2-a6a1ea977ca0}</Project>
       <Name>Pagan</Name>
     </ProjectReference>
   </ItemGroup>

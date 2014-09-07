@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{D5F4835E-63EB-4FDB-979E-AAB10752DAF4}</ProjectGuid>
+    <ProjectGuid>{5D5E08FD-BE7A-4EFE-B5A2-A6A1EA977CA0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Pagan</RootNamespace>
@@ -31,70 +31,41 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data.Linq" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Adapters\IDbTranslation.cs" />
-    <Compile Include="Adapters\SqlDbAdapter.cs" />
-    <Compile Include="Adapters\SqlDbTranslation.cs" />
-    <Compile Include="Adapters\SqlCommandTranslation.cs" />
-    <Compile Include="Column.cs" />
-    <Compile Include="Commands\Command.cs" />
-    <Compile Include="Commands\CommandColumn.cs" />
-    <Compile Include="Commands\CommandType.cs" />
-    <Compile Include="Commands\ICommand.cs" />
-    <Compile Include="Database.cs" />
-    <Compile Include="DbNameAttribute.cs" />
-    <Compile Include="Results\EntityField.cs" />
-    <Compile Include="Queries\IQuery.cs" />
-    <Compile Include="Queries\IQueryBuilder.cs" />
-    <Compile Include="Queries\IQuerySource.cs" />
-    <Compile Include="Results\Entity.cs" />
-    <Compile Include="Results\EntityMultiSet.cs" />
-    <Compile Include="Results\ExecutionError.cs" />
-    <Compile Include="Queries\FilterExpression.cs" />
-    <Compile Include="Queries\Operators.cs" />
-    <Compile Include="Queries\Query.cs" />
-    <Compile Include="Queries\QueryColumn.cs" />
-    <Compile Include="Results\EntitySet.cs" />
-    <Compile Include="Queries\SortDirection.cs" />
-    <Compile Include="Queries\SortingColumn.cs" />
-    <Compile Include="Registry\ConfigurationError.cs" />
-    <Compile Include="Adapters\IDbAdapter.cs" />
-    <Compile Include="Registry\Settings.cs" />
-    <Compile Include="Adapters\SqlQueryTranslation.cs" />
-    <Compile Include="Relationships\ILinkRef.cs" />
-    <Compile Include="Relationships\Role.cs" />
-    <Compile Include="Results\ReaderConverter.cs" />
-    <Compile Include="Table.cs" />
-    <Compile Include="Schema.cs" />
-    <Compile Include="ObjectExtensions.cs" />
+    <Compile Include="Adapters\AdapterFactory.cs" />
+    <Compile Include="Adapters\MSSqlServerAdapter.cs" />
+    <Compile Include="Linq\ExpressionResolver.cs" />
+    <Compile Include="Linq\Query.cs" />
+    <Compile Include="Linq\Query.Linq.cs" />
+    <Compile Include="Metadata\Field.cs" />
+    <Compile Include="Metadata\FieldNameAttribute.cs" />
+    <Compile Include="Metadata\ITableFactory.cs" />
+    <Compile Include="Metadata\SchemaNameAttribute.cs" />
+    <Compile Include="Metadata\Table.cs" />
+    <Compile Include="Metadata\TableFactory.cs" />
+    <Compile Include="Metadata\Table.helpers.cs" />
+    <Compile Include="Metadata\TableNameAttribute.cs" />
+    <Compile Include="SqlObjects\AggregatedField.cs" />
+    <Compile Include="SqlObjects\AggregateFunction.cs" />
+    <Compile Include="SqlObjects\SqlField.cs" />
+    <Compile Include="SqlObjects\Filter.cs" />
+    <Compile Include="SqlObjects\JoinType.cs" />
+    <Compile Include="SqlObjects\OrderedField.cs" />
+    <Compile Include="SqlObjects\QueryBuilder.cs" />
+    <Compile Include="SqlObjects\SelectedField.cs" />
+    <Compile Include="SqlObjects\SortDirection.cs" />
+    <Compile Include="SqlObjects\Source.cs" />
+    <Compile Include="Adapters\ISqlAdapter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Table.generic.cs" />
-    <Compile Include="Registry\TableFactory.cs" />
-    <Compile Include="Registry\ITableFactory.cs" />
-    <Compile Include="Registry\ITableConventions.cs" />
-    <Compile Include="Registry\TableConventions.cs" />
-    <Compile Include="Relationships\ChildRef.cs" />
-    <Compile Include="Relationships\HasMany.cs" />
-    <Compile Include="Relationships\HasOne.cs" />
-    <Compile Include="Relationships\IDependent.cs" />
-    <Compile Include="Relationships\IPrincipal.cs" />
-    <Compile Include="Relationships\LinkRef.cs" />
-    <Compile Include="Relationships\LinkRef.generic.cs" />
-    <Compile Include="Relationships\ParentRef.cs" />
-    <Compile Include="Relationships\Relationship.cs" />
-    <Compile Include="Relationships\WithOne.cs" />
-    <Compile Include="Relationships\WithOptional.cs" />
-    <Compile Include="UseAsTableNameAttribute.cs" />
+    <Compile Include="SqlObjects\JoinedTable.cs" />
+    <Compile Include="SqlObjects\SqlQuery.cs" />
+    <Compile Include="SqlObjects\SqlTable.cs" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

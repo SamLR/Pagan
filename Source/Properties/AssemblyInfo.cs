@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Pagan")]
-[assembly: AssemblyDescription("Pagan data access")]
+[assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("")]
-[assembly: AssemblyCopyright("Copyright © Pete Warner 2014")]
+[assembly: AssemblyProduct("Pagan")]
+[assembly: AssemblyCopyright("Copyright P Warner ©  2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("c06a4eee-9f28-4062-9fd1-df6210a08818")]
+[assembly: Guid("0257174a-d202-4e58-88b2-37fc108799b4")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -35,5 +35,5 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
 
-// Make internal members visible to the test suite
+// added this so the tests can access the internals
 [assembly: InternalsVisibleTo("Pagan.Tests")]
