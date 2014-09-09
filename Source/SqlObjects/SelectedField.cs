@@ -6,6 +6,6 @@ namespace Pagan.SqlObjects
     class SelectedField
     {
         public string Alias { get; set; }
-        public SqlField Field { get; set; }
+        public Field Field { get; set; }
     }
 }

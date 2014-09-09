@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Pagan.Conditions;
 
 namespace Pagan.SqlObjects
 {
@@ -7,21 +8,19 @@ namespace Pagan.SqlObjects
     /// </summary>
     class SqlQuery
     {
-        public SqlQuery(SqlTable table)
+        public SqlQuery(Table table)
         {
             Source = new Source {Table = table};
             Selection = new List<SelectedField>();
-            Condition = new Filter();
             Ordering = new List<OrderedField>();
-            Grouping = new List<SqlField>();
-            Having = new Filter();
+            Grouping = new List<Field>();
         }
 
         public Source Source { get; private set; }
         public List<SelectedField> Selection { get; private set; }
-        public Filter Condition { get; private set; }
+        public Condition Condition { get; private set; }
         public List<OrderedField> Ordering { get; private set; }
-        public List<SqlField> Grouping { get; private set; }
-        public Filter Having { get; private set; }
+        public List<Field> Grouping { get; private set; }
+        public Condition Having { get; private set; }
     }
 }

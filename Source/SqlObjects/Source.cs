@@ -8,7 +8,7 @@ namespace Pagan.SqlObjects
     /// </summary>
     class Source
     {
-        public SqlTable Table { get; set; }
+        public Table Table { get; set; }
         public List<JoinedTable> JoinedTables { get; set; }
         public SqlQuery SubSqlQuery { get; set; }
     }

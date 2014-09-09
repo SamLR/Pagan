@@ -5,7 +5,7 @@ namespace Pagan.SqlObjects
     /// </summary>
     class JoinedTable
     {
-        public SqlTable Table { get; set; }
+        public Table Table { get; set; }
         public JoinType JoinType { get; set; }
     }
 }

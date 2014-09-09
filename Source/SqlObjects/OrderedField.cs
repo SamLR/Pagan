@@ -6,6 +6,6 @@ namespace Pagan.SqlObjects
     class OrderedField
     {
         public SortDirection Direction { get; set; }
-        public SqlField Field { get; set; }
+        public Field Field { get; set; }
     }
 }

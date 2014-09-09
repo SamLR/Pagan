@@ -4,7 +4,7 @@ namespace Pagan.SqlObjects
     {
         private readonly SqlQuery _query;
 
-        public QueryBuilder(SqlTable table)
+        public QueryBuilder(Table table)
         {
             _query = new SqlQuery(table);
         }

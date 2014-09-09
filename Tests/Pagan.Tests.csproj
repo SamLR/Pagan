@@ -41,12 +41,8 @@
   <ItemGroup>
     <Compile Include="AdapterTests\FactoryTests.cs" />
     <Compile Include="AdapterTests\MSSqlServerAdapterTests.cs" />
-    <Compile Include="LinqTests\QueryTests.cs" />
-    <Compile Include="MetadataTests\OrderDetail.cs" />
-    <Compile Include="MetadataTests\TableFactoryTests.cs" />
-    <Compile Include="MetadataTests\TableInfoTests.cs" />
-    <Compile Include="MetadataTests\TestTable.cs" />
-    <Compile Include="MetadataTests\TestTable2.cs" />
+    <Compile Include="Configuration\DefinitionTests.cs" />
+    <Compile Include="Configuration\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

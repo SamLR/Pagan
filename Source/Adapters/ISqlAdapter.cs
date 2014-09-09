@@ -7,8 +7,8 @@ namespace Pagan.Adapters
     /// </summary>
     interface ISqlAdapter
     {
-        string Table(SqlTable table);
-        string Field(SqlField field);
+        string Table(Table table);
+        string Field(Field field);
         string ParameterPrefix { get; }
     }
 }
