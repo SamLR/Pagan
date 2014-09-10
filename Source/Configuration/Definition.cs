@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Pagan.Relationships;
 using Pagan.SqlObjects;
 
 namespace Pagan.Configuration
@@ -10,6 +11,7 @@ namespace Pagan.Configuration
         {
             Fields = new List<Field>();
             Keys = new List<Key>();
+            Relationships = new List<Relationship>();
             Factory = factory;
         }
 
@@ -19,5 +21,6 @@ namespace Pagan.Configuration
         public Table Table { get; internal set; }
         public List<Field> Fields { get; private set; }
         public List<Key> Keys { get; private set; }
+        public List<Relationship> Relationships { get; private set; } 
     }
 }

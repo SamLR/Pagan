@@ -1,27 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using Pagan.Conditions;
 using Pagan.Configuration;
 using Pagan.SqlObjects;
 
 namespace Pagan.Relationships
 {
-    public abstract class Relationship<T>: DefinitionItem
+    public abstract class Relationship : DefinitionItem
     {
-        protected readonly Dictionary<Field, Func<T, Field>> Mappings;
-
-        internal Relationship(string memberName, Definition definition) : base(memberName, definition)
+        internal Relationship(string memberName, Definition definition): base(memberName, definition)
         {
-            Mappings = new Dictionary<Field, Func<T, Field>>();
         }
 
-        internal Condition GetCondition()
+        internal RelationshipType? Type; 
+        internal abstract IEnumerable<FieldMatchCondition> GetFieldMatchConditions();
+        internal abstract bool HasMappings { get; }
+        internal abstract Condition GetCondition();
+        internal abstract RelationshipRole Role { get; }
+        public abstract JoinedTable GetJoin();
+
+        public void HasMany()
         {
-            var other = Definition.Factory.GetDefinition<T>();
-            return LogicalGroup.And(
-                Mappings.Select(p => new FieldMatchCondition(p.Key, p.Value(other.Instance)))
-                );
+            Type = RelationshipType.HasMany;
+        }
+
+        public void HasOne()
+        {
+            Type = RelationshipType.HasOne;
+        }
+
+        public void WithMany()
+        {
+            Type = RelationshipType.WithMany;
+        }
+
+        public void WithOne()
+        {
+            Type = RelationshipType.WithOne;
         }
     }
 }

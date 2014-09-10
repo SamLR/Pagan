@@ -46,8 +46,12 @@
     <Compile Include="Configuration\DefinitionItem.cs" />
     <Compile Include="Relationships\Dependent.cs" />
     <Compile Include="Relationships\Principal.cs" />
-    <Compile Include="SqlObjects\Field.cs" />
     <Compile Include="Relationships\Relationship.cs" />
+    <Compile Include="Relationships\RelationshipError.cs" />
+    <Compile Include="Relationships\RelationshipRole.cs" />
+    <Compile Include="Relationships\RelationshipType.cs" />
+    <Compile Include="SqlObjects\Field.cs" />
+    <Compile Include="Relationships\Relationship.strong.cs" />
     <Compile Include="Configuration\IDefinitionFactory.cs" />
     <Compile Include="SqlObjects\Key.cs" />
     <Compile Include="SqlObjects\Schema.cs" />
@@ -60,7 +64,6 @@
     <Compile Include="Conditions\LogicalOperator.cs" />
     <Compile Include="SqlObjects\AggregatedField.cs" />
     <Compile Include="SqlObjects\AggregateFunction.cs" />
-    <Compile Include="SqlObjects\JoinType.cs" />
     <Compile Include="SqlObjects\OrderedField.cs" />
     <Compile Include="SqlObjects\QueryBuilder.cs" />
     <Compile Include="SqlObjects\SelectedField.cs" />

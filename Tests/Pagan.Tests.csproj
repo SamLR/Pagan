@@ -42,7 +42,13 @@
     <Compile Include="AdapterTests\FactoryTests.cs" />
     <Compile Include="AdapterTests\MSSqlServerAdapterTests.cs" />
     <Compile Include="Configuration\DefinitionTests.cs" />
-    <Compile Include="Configuration\User.cs" />
+    <Compile Include="Relationships\RelationshipTests.cs" />
+    <Compile Include="SampleDefinitions\Blog.cs" />
+    <Compile Include="SampleDefinitions\NoKeyExample.cs" />
+    <Compile Include="SampleDefinitions\NoTableExample.cs" />
+    <Compile Include="SampleDefinitions\NoTwinExample.cs" />
+    <Compile Include="SampleDefinitions\User.cs" />
+    <Compile Include="SampleDefinitions\UserEx.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

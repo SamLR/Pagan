@@ -3,6 +3,7 @@ using System.Linq;
 using NUnit.Framework;
 using Pagan.Configuration;
 using Pagan.SqlObjects;
+using Pagan.Tests.SampleDefinitions;
 
 namespace Pagan.Tests.Configuration
 {
@@ -61,7 +62,7 @@ namespace Pagan.Tests.Configuration
             Assert.NotNull(t.Table);
             Assert.NotNull(t.Instance.Users);
 
-            Assert.AreEqual(t.Table, t.Instance.Users);
+            Assert.AreSame(t.Table, t.Instance.Users);
         }
 
         [Test]
@@ -80,7 +81,7 @@ namespace Pagan.Tests.Configuration
             Assert.NotNull(t.Schema);
             Assert.NotNull(t.Instance.Dbo);
 
-            Assert.AreEqual(t.Schema, t.Instance.Dbo);
+            Assert.AreSame(t.Schema, t.Instance.Dbo);
         }
 
         [Test]
@@ -105,6 +106,22 @@ namespace Pagan.Tests.Configuration
             var t = GetUser();
 
             Assert.AreEqual(1, t.Keys.Count);
+        }
+
+        [Test]
+        public void TableHasRelationships()
+        {
+            var t = GetUser();
+
+            Assert.AreEqual(1, t.Relationships.Count);
+        }
+
+        [Test]
+        public void RelationshipName()
+        {
+            var t = GetUser();
+
+            Assert.AreEqual("Blogs", t.Relationships[0].Name);
         }
 
         [Test]

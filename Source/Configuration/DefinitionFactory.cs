@@ -3,6 +3,7 @@ using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Pagan.Relationships;
 using Pagan.SqlObjects;
 
 namespace Pagan.Configuration
@@ -78,6 +79,10 @@ namespace Pagan.Configuration
 
                 var key = item as Key;
                 if (!ReferenceEquals(key, null)) definition.Keys.Add(key);
+
+                var relationship = item as Relationship;
+                if(relationship!=null) definition.Relationships.Add(relationship);
+
             }
 
         }
