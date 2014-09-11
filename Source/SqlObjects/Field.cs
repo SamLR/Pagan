@@ -2,7 +2,7 @@
 
 namespace Pagan.SqlObjects
 {
-    public class Field: DefinitionItem
+    public partial class Field: DefinitionItem
     {
         internal Field(string memberName, Definition definition) : base(memberName, definition)
         {

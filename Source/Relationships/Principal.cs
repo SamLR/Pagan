@@ -19,9 +19,9 @@ namespace Pagan.Relationships
             return this;
         }
 
-        internal override IEnumerable<FieldMatchCondition> GetFieldMatchConditions()
+        internal override IEnumerable<FieldJoin> GetFieldMatchConditions()
         {
-            return Mappings.Select(p => new FieldMatchCondition(p.Key, p.Value(Other.Instance)));
+            return Mappings.Select(p => new FieldJoin(p.Key, p.Value(Other.Instance)));
         }
 
         internal override RelationshipRole Role

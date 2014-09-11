@@ -12,9 +12,9 @@ namespace Pagan.Relationships
         }
 
         internal RelationshipType? Type; 
-        internal abstract IEnumerable<FieldMatchCondition> GetFieldMatchConditions();
+        internal abstract IEnumerable<FieldJoin> GetFieldMatchConditions();
         internal abstract bool HasMappings { get; }
-        internal abstract Condition GetCondition();
+        internal abstract LogicalGroup GetCondition();
         internal abstract RelationshipRole Role { get; }
         public abstract JoinedTable GetJoin();
 

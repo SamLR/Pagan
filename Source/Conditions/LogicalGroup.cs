@@ -2,16 +2,24 @@ using System.Collections.Generic;
 
 namespace Pagan.Conditions
 {
-    public class LogicalGroup : Condition
+    public partial class LogicalGroup: Condition
     {
-        private readonly List<Condition> _conditions;
-
-        internal static Condition And(IEnumerable<Condition> conditions)
+        internal static LogicalGroup And(IEnumerable<Condition> conditions)
         {
             return new LogicalGroup(LogicalOperator.And, conditions);
         }
 
-        internal static Condition Or(IEnumerable<Condition> conditions)
+        internal static LogicalGroup Or(IEnumerable<Condition> conditions)
+        {
+            return new LogicalGroup(LogicalOperator.Or, conditions);
+        }
+
+        internal static LogicalGroup And(params Condition[] conditions)
+        {
+            return new LogicalGroup(LogicalOperator.And, conditions);
+        }
+
+        internal static LogicalGroup Or(params Condition[] conditions)
         {
             return new LogicalGroup(LogicalOperator.Or, conditions);
         }
@@ -19,19 +27,26 @@ namespace Pagan.Conditions
         internal LogicalGroup(LogicalOperator op, IEnumerable<Condition> conditions=null)
         {
             Operator = op;
-            _conditions = conditions == null ? new List<Condition>() : new List<Condition>(conditions);
+            Conditions = conditions == null ? new List<Condition>() : new List<Condition>(conditions);
         }
 
         public LogicalOperator Operator { get; private set; }
 
-        public IEnumerable<Condition> Conditions
+        public List<Condition> Conditions { get; private set; }
+
+        public LogicalGroup And(Condition condition)
         {
-            get { return _conditions; }
+            if (Operator != LogicalOperator.And) return And(this, condition);
+            Conditions.Add(condition);
+            return this;
         }
 
-        internal void Add(Condition condition)
+        public LogicalGroup Or(Condition condition)
         {
-            _conditions.Add(condition);
+            if (Operator != LogicalOperator.Or) return Or(this, condition);
+            Conditions.Add(condition);
+            return this;
         }
+
     }
 }

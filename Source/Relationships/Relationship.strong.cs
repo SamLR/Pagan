@@ -36,7 +36,7 @@ namespace Pagan.Relationships
             return twin;
         }
 
-        private Condition GetConditionFromTwin()
+        private LogicalGroup GetConditionFromTwin()
         {
             if (!Twin.HasMappings)
                 throw RelationshipError.NoMappingDefined(MemberName, Twin.MemberName);
@@ -59,7 +59,7 @@ namespace Pagan.Relationships
             get { return Mappings.Count > 0; }
         }
 
-        internal override Condition GetCondition()
+        internal override LogicalGroup GetCondition()
         {
             // field mappings can be defined on either side of the relationship
             return !HasMappings 
@@ -79,9 +79,11 @@ namespace Pagan.Relationships
 
         public override JoinedTable GetJoin()
         {
+            var condition = GetCondition();
+
             return new JoinedTable
             {
-                JoinCondition = GetCondition(),
+                JoinCondition = condition.Conditions.Count == 1 ? condition.Conditions[0] : condition,
                 Role = Role,
                 Type = GetRelationshipType(),
                 Table = Other.Table

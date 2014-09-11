@@ -87,7 +87,7 @@ namespace Pagan.Tests.Relationships
         {
             var join = GetBlogEnd().GetJoin();
             var condition = (LogicalGroup)join.JoinCondition;
-            var conditions = condition.Conditions.Cast<FieldMatchCondition>().ToArray();
+            var conditions = condition.Conditions.Cast<FieldJoin>().ToArray();
             var left = GetUserField("Id");
             var right = GetBlogField("UserId");
             
@@ -101,7 +101,7 @@ namespace Pagan.Tests.Relationships
         {
             var join = GetUserEnd().GetJoin();
             var condition = (LogicalGroup) join.JoinCondition;
-            var conditions = condition.Conditions.Cast<FieldMatchCondition>().ToArray();
+            var conditions = condition.Conditions.Cast<FieldJoin>().ToArray();
             var left = GetUserField("Id");
             var right = GetBlogField("UserId");
 

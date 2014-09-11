@@ -2,9 +2,9 @@ using Pagan.SqlObjects;
 
 namespace Pagan.Conditions
 {
-    public class FieldMatchCondition : Condition
+    public class FieldJoin : Condition
     {
-        internal FieldMatchCondition(Field left, Field right)
+        internal FieldJoin(Field left, Field right)
         {
             Left = left;
             Right = right;

@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="AdapterTests\FactoryTests.cs" />
     <Compile Include="AdapterTests\MSSqlServerAdapterTests.cs" />
+    <Compile Include="Conditions\LogicalGroupTests.cs" />
     <Compile Include="Configuration\DefinitionTests.cs" />
     <Compile Include="Relationships\RelationshipTests.cs" />
     <Compile Include="SampleDefinitions\Blog.cs" />
@@ -60,6 +61,7 @@
       <Name>Pagan</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

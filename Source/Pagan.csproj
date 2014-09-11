@@ -41,6 +41,7 @@
     <Compile Include="Adapters\MSSqlServerAdapter.cs" />
     <Compile Include="Conditions\ComparisonOperator.cs" />
     <Compile Include="Conditions\Condition.cs" />
+    <Compile Include="Conditions\LogicalGroup.operators.cs" />
     <Compile Include="Configuration\Definition.strong.cs" />
     <Compile Include="Configuration\DefinitionError.cs" />
     <Compile Include="Configuration\DefinitionItem.cs" />
@@ -53,13 +54,14 @@
     <Compile Include="SqlObjects\Field.cs" />
     <Compile Include="Relationships\Relationship.strong.cs" />
     <Compile Include="Configuration\IDefinitionFactory.cs" />
+    <Compile Include="SqlObjects\Field.operators.cs" />
     <Compile Include="SqlObjects\Key.cs" />
     <Compile Include="SqlObjects\Schema.cs" />
     <Compile Include="SqlObjects\Table.cs" />
     <Compile Include="Configuration\Definition.cs" />
     <Compile Include="Configuration\DefinitionFactory.cs" />
-    <Compile Include="Conditions\FieldMatchCondition.cs" />
-    <Compile Include="Conditions\FieldValueCondition.cs" />
+    <Compile Include="Conditions\FieldJoin.cs" />
+    <Compile Include="Conditions\FieldComparison.cs" />
     <Compile Include="Conditions\LogicalGroup.cs" />
     <Compile Include="Conditions\LogicalOperator.cs" />
     <Compile Include="SqlObjects\AggregatedField.cs" />
