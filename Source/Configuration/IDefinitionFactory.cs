@@ -1,7 +1,9 @@
+using System;
+
 namespace Pagan.Configuration
 {
     interface IDefinitionFactory
     {
-        Definition<T> GetDefinition<T>();
+        IDefinition GetDefinition(Type definitionType);
     }
 }

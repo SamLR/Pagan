@@ -19,7 +19,7 @@ namespace Pagan.Tests.AdapterTests
         [Test]
         public void TableFormatWithSchema()
         {
-            var tbl = new Table("Customers", null) {Schema = new Schema("Sales", null)};
+            var tbl = new Table("Customers") {Schema = new Schema("Sales")};
             var actual = _testable.Table(tbl);
 
             Assert.AreEqual("[Sales].[Customers]", actual);
@@ -28,7 +28,7 @@ namespace Pagan.Tests.AdapterTests
         [Test]
         public void TableFormatWithoutSchema()
         {
-            var tbl = new Table("Customers", null);
+            var tbl = new Table("Customers");
             var actual = _testable.Table(tbl);
 
             Assert.AreEqual("[Customers]", actual);
@@ -37,8 +37,8 @@ namespace Pagan.Tests.AdapterTests
         [Test]
         public void FieldFormatWithSchema()
         {
-            var tbl = new Table("Customers", null) { Schema = new Schema("Sales", null) };
-            var fld = new Field("Id", null) {Table = tbl};
+            var tbl = new Table("Customers") { Schema = new Schema("Sales") };
+            var fld = new Field("Id") {Table = tbl};
             var actual = _testable.Field(fld);
 
             Assert.AreEqual("[Sales].[Customers].[Id]", actual);
@@ -47,8 +47,8 @@ namespace Pagan.Tests.AdapterTests
         [Test]
         public void FieldFormatWithoutSchema()
         {
-            var tbl = new Table("Customers", null);
-            var fld = new Field("Id", null) { Table = tbl }; 
+            var tbl = new Table("Customers");
+            var fld = new Field("Id") { Table = tbl }; 
             var actual = _testable.Field(fld);
 
             Assert.AreEqual("[Customers].[Id]", actual);

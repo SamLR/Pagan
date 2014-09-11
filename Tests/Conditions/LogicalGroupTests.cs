@@ -9,7 +9,7 @@ namespace Pagan.Tests.Conditions
     {
         private static FieldComparison GetCondition()
         {
-            return new FieldComparison(new Field("Member", null), null, ComparisonOperator.Equal);
+            return new FieldComparison(new Field("Member"), null, ComparisonOperator.Equal);
         }
 
         private static void Check(LogicalGroup result, int expectedCount, LogicalOperator expectedOperator)

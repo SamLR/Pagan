@@ -1,10 +1,8 @@
-﻿using Pagan.Configuration;
-
-namespace Pagan.SqlObjects
+﻿namespace Pagan.SqlObjects
 {
     public class Key : Field
     {
-        internal Key(string memberName, Definition definition) : base(memberName, definition)
+        public Key(string name) : base(name)
         {
             IsKey = true;
         }

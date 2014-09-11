@@ -2,10 +2,13 @@
 
 namespace Pagan.SqlObjects
 {
-    public class Schema: DefinitionItem
+    public class Schema: IDefinitionItem
     {
-        internal Schema(string memberName, Definition definition) : base(memberName, definition)
+        internal Schema(string name)
         {
+            Name = name;
         }
+
+        public string Name { get; private set; }
     }
 }

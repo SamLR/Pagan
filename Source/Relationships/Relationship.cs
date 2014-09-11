@@ -1,41 +1,48 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Pagan.Conditions;
 using Pagan.Configuration;
 using Pagan.SqlObjects;
 
 namespace Pagan.Relationships
 {
-    public abstract class Relationship : DefinitionItem
+    public abstract class Relationship : IDefinitionItem
     {
-        internal Relationship(string memberName, Definition definition): base(memberName, definition)
+        protected Relationship(string name)
         {
+            Name = name;
         }
 
-        internal RelationshipType? Type; 
-        internal abstract IEnumerable<FieldJoin> GetFieldMatchConditions();
         internal abstract bool HasMappings { get; }
-        internal abstract LogicalGroup GetCondition();
-        internal abstract RelationshipRole Role { get; }
-        public abstract JoinedTable GetJoin();
+        internal abstract Condition CreateJoin(object related);
 
-        public void HasMany()
+        public Type RelatedType { get; protected set; }
+        public Type DefiningType { get; internal set; }
+        public RelationshipEnd RelatesTo { get; protected set; }
+        public string Name { get; private set; }
+        public Multiplicity Multiplicity { get; protected set; }
+    }
+
+    public abstract class Relationship<T> : Relationship where T:class
+    {
+        protected Relationship(string name) : base(name)
         {
-            Type = RelationshipType.HasMany;
+            RelatedType = typeof (T);
+            Mappings = new Dictionary<Field, Func<T, Field>>();
         }
 
-        public void HasOne()
-        {
-            Type = RelationshipType.HasOne;
-        }
+        protected Dictionary<Field, Func<T, Field>> Mappings;
+        protected abstract IEnumerable<FieldJoin> GetFieldJoins(T related);
 
-        public void WithMany()
+        internal override bool HasMappings { get { return Mappings.Count > 0; } }
+        internal override Condition CreateJoin(object related)
         {
-            Type = RelationshipType.WithMany;
-        }
+            var target = (T) related;
 
-        public void WithOne()
-        {
-            Type = RelationshipType.WithOne;
+            return Mappings.Count > 1
+                ? (Condition) LogicalGroup.And(GetFieldJoins(target))
+                : GetFieldJoins(target).First();
         }
     }
 }

@@ -20,19 +20,19 @@ namespace Pagan.Tests.Relationships
             _factory = new DefinitionFactory();
         }
 
-        private Relationship GetUserEnd()
+        private IDefinition GetUsers()
         {
-            return _factory.GetDefinition<User>().Relationships[0];
+            return _factory.GetDefinition(typeof (Users));
         }
 
-        private Relationship GetBlogEnd()
+        private IDefinition GetBlogs()
         {
-            return _factory.GetDefinition<Blog>().Relationships[0];
+            return _factory.GetDefinition(typeof (Blogs));
         }
 
         private Relationship GetMissingTwinEnd()
         {
-            return _factory.GetDefinition<NoTwinExample>().Relationships[0];
+            return _factory.GetDefinition(typeof(NoTwinExample)).Relationships[0];
         }
 
         private Field GetUserField(string name)
@@ -70,7 +70,7 @@ namespace Pagan.Tests.Relationships
             var blogRel = GetBlogEnd();
             var role = blogRel.GetJoin().Role;
 
-            Assert.AreEqual(RelationshipRole.Principal, role);
+            Assert.AreEqual(RelationshipEnd.Principal, role);
         }
 
         [Test]
@@ -79,7 +79,7 @@ namespace Pagan.Tests.Relationships
             var userEnd = GetUserEnd();
             var role = userEnd.GetJoin().Role;
 
-            Assert.AreEqual(RelationshipRole.Dependent, role);
+            Assert.AreEqual(RelationshipEnd.Dependent, role);
         }
 
         [Test]

@@ -5,18 +5,22 @@ using Pagan.SqlObjects;
 
 namespace Pagan.Configuration
 {
-    internal abstract class Definition
+    internal partial class Definition: IDefinition
     {
-        protected Definition(IDefinitionFactory factory)
+        internal Definition(Type definitionType)
         {
+            Type = definitionType;
+            Instance = Activator.CreateInstance(definitionType);
             Fields = new List<Field>();
             Keys = new List<Key>();
             Relationships = new List<Relationship>();
-            Factory = factory;
+
+            CreateMembers();
+            CallConfigure();
         }
 
-        internal IDefinitionFactory Factory;
-        public Type Type { get; protected set; }
+        public Type Type { get; internal set; }
+        public object Instance { get; internal set; }
         public Schema Schema { get; internal set; }
         public Table Table { get; internal set; }
         public List<Field> Fields { get; private set; }

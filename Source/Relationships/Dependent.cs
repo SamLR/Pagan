@@ -1,32 +1,27 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Pagan.Conditions;
-using Pagan.Configuration;
 using Pagan.SqlObjects;
 
 namespace Pagan.Relationships
 {
-    public class Dependent<T> : Relationship<T>
+    public abstract class Dependent<T> : Relationship<T>
     {
-        internal Dependent(string memberName, Definition definition) : base(memberName, definition)
+        protected Dependent(string name) : base(name)
         {
+            RelatesTo = RelationshipEnd.Principal;
         }
 
-        public Dependent<T> Map(Field fKey, Func<T, Key> keySelector)
+        public Dependent<T> Map(Field foreignKey, Func<T, Key> key)
         {
-            Mappings[fKey] = keySelector;
+            Mappings[foreignKey] = key;
             return this;
         }
 
-        internal override IEnumerable<FieldJoin> GetFieldMatchConditions()
+        protected override IEnumerable<FieldJoin> GetFieldJoins(T related)
         {
-            return Mappings.Select(p => new FieldJoin(p.Value(Other.Instance), p.Key));
-        }
-
-        internal override RelationshipRole Role
-        {
-            get { return RelationshipRole.Principal; }
+            return Mappings.Select(m => new FieldJoin(m.Value(related), m.Key));
         }
     }
 }

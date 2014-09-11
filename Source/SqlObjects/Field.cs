@@ -1,14 +1,26 @@
-﻿using Pagan.Configuration;
+﻿using System;
+using Pagan.Configuration;
 
 namespace Pagan.SqlObjects
 {
-    public partial class Field: DefinitionItem
+    public partial class Field: IDefinitionItem
     {
-        internal Field(string memberName, Definition definition) : base(memberName, definition)
+        private string _name;
+
+        public Field(string name)
         {
+            MemberName = name;
+            _name = name;
         }
 
         public Table Table { get; internal set; }
+        public string MemberName { get; private set; }
+
+        public string Name
+        {
+            get { return String.IsNullOrEmpty(_name) ? MemberName: _name; }
+            set { _name = value; }
+        }
 
         public bool IsKey { get; protected set; }
     }

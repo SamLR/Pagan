@@ -2,17 +2,14 @@
 
 namespace Pagan.SqlObjects
 {
-    public class Table: DefinitionItem
+    public class Table: IDefinitionItem
     {
-        internal Table(string memberName, Definition definition) : base(memberName, definition)
+        internal Table(string name)
         {
+            Name = name;
         }
 
         public Schema Schema { get; internal set; }
-
-        public void UseSingularForm()
-        {
-            Name = Definition.Type.Name;
-        }
+        public string Name { get; private set; }
     }
 }

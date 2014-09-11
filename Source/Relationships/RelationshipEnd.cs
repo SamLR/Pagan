@@ -1,6 +1,6 @@
 namespace Pagan.Relationships
 {
-    public enum RelationshipRole
+    public enum RelationshipEnd
     {
         Principal,
         Dependent

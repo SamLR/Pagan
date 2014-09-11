@@ -8,31 +8,21 @@ namespace Pagan.Relationships
         {
         }
 
-        internal static RelationshipError NoMappingDefined(string principal, string dependent)
+        internal static RelationshipError NoMappingDefined(Type principal, Type dependent)
         {
             return new RelationshipError(
-                "No mapping for keys on {0} to fields on {1} was defined",
+                "No mapping between '{0}' and '{1}' was defined on either end of the relationship",
                 principal,
                 dependent
                 );
         }
 
-        internal static RelationshipError NoRelationshipTypeDefined(string principal, string dependent)
+        internal static RelationshipError NoRelationshipDefined(Type left, Type right)
         {
             return new RelationshipError(
-                "No relationship type was defined on either {0} or {1} was defined",
-                principal,
-                dependent
-                );
-        }
-
-        internal static RelationshipError MissingTwin(Type other, string name, Type me)
-        {
-            return new RelationshipError(
-                "No twin relationship is defined on {0} that matches relationship {1} defined on {2} ",
-                other,
-                name,
-                me
+                "No relationship of type '{1}' was defined on the definition for type '{0}'",
+                left,
+                right
                 );
         }
     }

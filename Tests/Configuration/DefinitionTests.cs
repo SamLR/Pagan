@@ -2,6 +2,7 @@
 using System.Linq;
 using NUnit.Framework;
 using Pagan.Configuration;
+using Pagan.Relationships;
 using Pagan.SqlObjects;
 using Pagan.Tests.SampleDefinitions;
 
@@ -18,14 +19,14 @@ namespace Pagan.Tests.Configuration
             _factory = new DefinitionFactory();
         }
 
-        private Definition<User> GetUser()
+        private IDefinition GetUser()
         {
-            return _factory.GetDefinition<User>();
+            return _factory.GetDefinition(typeof(Users));
         }
 
-        private Definition<UserEx> GetUserEx()
+        private IDefinition GetUserEx()
         {
-            return _factory.GetDefinition<UserEx>();
+            return _factory.GetDefinition(typeof(UsersEx));
         }
 
         private Field GetUserField(string name)
@@ -60,9 +61,6 @@ namespace Pagan.Tests.Configuration
             var t = GetUser();
 
             Assert.NotNull(t.Table);
-            Assert.NotNull(t.Instance.Users);
-
-            Assert.AreSame(t.Table, t.Instance.Users);
         }
 
         [Test]
@@ -70,30 +68,20 @@ namespace Pagan.Tests.Configuration
         {
             var t = GetUser();
 
+            Assert.NotNull(t.Table);
             Assert.AreEqual("Users", t.Table.Name);
         }
 
         [Test]
-        public void SchemaCreated()
+        public void SchemaOptional()
         {
             var t = GetUser();
 
-            Assert.NotNull(t.Schema);
-            Assert.NotNull(t.Instance.Dbo);
-
-            Assert.AreSame(t.Schema, t.Instance.Dbo);
+            Assert.IsNull(t.Schema);
         }
 
         [Test]
-        public void SchemaName()
-        {
-            var t = GetUser();
-
-            Assert.AreEqual("Dbo", t.Schema.Name);
-        }
-
-        [Test]
-        public void TableHasFields()
+        public void HasFields()
         {
             var t = GetUser();
 
@@ -101,7 +89,7 @@ namespace Pagan.Tests.Configuration
         }
 
         [Test]
-        public void TableHasKeys()
+        public void HasKeys()
         {
             var t = GetUser();
 
@@ -109,7 +97,7 @@ namespace Pagan.Tests.Configuration
         }
 
         [Test]
-        public void TableHasRelationships()
+        public void HasRelationships()
         {
             var t = GetUser();
 
@@ -122,6 +110,23 @@ namespace Pagan.Tests.Configuration
             var t = GetUser();
 
             Assert.AreEqual("Blogs", t.Relationships[0].Name);
+        }
+
+        [Test]
+        public void RelationshipTypes()
+        {
+            var t = GetUser();
+
+            Assert.AreSame(typeof(Users), t.Relationships[0].DefiningType);
+            Assert.AreSame(typeof(Blogs), t.Relationships[0].RelatedType);
+        }
+
+        [Test]
+        public void RelationshipEndType()
+        {
+            var t = GetUser();
+
+            Assert.AreEqual(RelationshipEnd.Principal, t.Relationships[0].RelatesTo);
         }
 
         [Test]
@@ -139,11 +144,21 @@ namespace Pagan.Tests.Configuration
         }
 
         [Test]
-        public void ExplicitTableName()
+        public void ExplicitTable()
         {
             var t = GetUserEx();
 
-            Assert.AreEqual("UserEx", t.Table.Name);
+            Assert.AreEqual("Users", t.Table.Name);
+            Assert.AreSame(t.Table, ((UsersEx) t.Instance).Users);
+        }
+
+        [Test]
+        public void ExplicitSchema()
+        {
+            var t = GetUserEx();
+
+            Assert.AreEqual("Dbo", t.Schema.Name);
+            Assert.AreSame(t.Schema, ((UsersEx)t.Instance).Dbo);
         }
 
         [Test]
@@ -161,20 +176,20 @@ namespace Pagan.Tests.Configuration
         }
 
         [Test]
-        public void MissingTableMemberThrows()
+        public void MissingFieldsThrows()
         {
             Assert.Throws<DefinitionError>(
                 () =>
-                    _factory.GetDefinition<NoTableExample>()
+                    _factory.GetDefinition(typeof(NoFieldExample))
                 );
         }
 
         [Test]
-        public void MissingKeyMemberThrows()
+        public void MissingKeyThrows()
         {
             Assert.Throws<DefinitionError>(
                 () =>
-                    _factory.GetDefinition<NoKeyExample>()
+                    _factory.GetDefinition(typeof(NoKeyExample))
                 );
         }
     }

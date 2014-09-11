@@ -10,7 +10,7 @@ namespace Pagan.SqlObjects
     {
         public Table Table { get; set; }
         public Condition JoinCondition { get; set; }
-        public RelationshipType Type { get; set; }
-        public RelationshipRole Role { get; set; }
+        public Multiplicity Multiplicity { get; set; }
+        public RelationshipEnd End { get; set; }
     }
 }
