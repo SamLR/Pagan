@@ -23,5 +23,13 @@ namespace Pagan.SqlObjects
         }
 
         public bool IsKey { get; protected set; }
+
+        public SelectedField As(string name)
+        {
+            return name != null && !name.Equals(MemberName)
+                ? new SelectedField {Alias = name, Field = this}
+                : this;
+
+        }
     }
 }

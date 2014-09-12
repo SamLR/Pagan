@@ -1,4 +1,5 @@
 using Pagan.Conditions;
+using Pagan.Configuration;
 using Pagan.Relationships;
 
 namespace Pagan.SqlObjects
@@ -8,7 +9,8 @@ namespace Pagan.SqlObjects
     /// </summary>
     public class JoinedTable
     {
-        public Table Table { get; set; }
+        internal IDefinition Definition;
+        public Table Table { get { return Definition.Table; } }
         public Condition JoinCondition { get; set; }
         public Multiplicity Multiplicity { get; set; }
         public RelationshipEnd End { get; set; }

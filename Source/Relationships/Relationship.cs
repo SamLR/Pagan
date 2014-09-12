@@ -7,7 +7,7 @@ using Pagan.SqlObjects;
 
 namespace Pagan.Relationships
 {
-    public abstract class Relationship : IDefinitionItem
+    public abstract class Relationship : IDefinitionItem, IRelationship
     {
         protected Relationship(string name)
         {
@@ -24,7 +24,7 @@ namespace Pagan.Relationships
         public Multiplicity Multiplicity { get; protected set; }
     }
 
-    public abstract class Relationship<T> : Relationship where T:class
+    public abstract class Relationship<T> : Relationship
     {
         protected Relationship(string name) : base(name)
         {

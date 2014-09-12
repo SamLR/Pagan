@@ -23,25 +23,30 @@ namespace Pagan.SqlObjects
         {
             return new FieldComparison(left, right, ComparisonOperator.LessOrEqual);
         }
-        
+
         public static FieldComparison operator >(Field left, object right)
         {
             return new FieldComparison(left, right, ComparisonOperator.GreaterThan);
         }
-        
+
         public static FieldComparison operator <(Field left, object right)
         {
             return new FieldComparison(left, right, ComparisonOperator.LessThan);
         }
-        
+
         public static FieldComparison operator !(Field field)
         {
             return field == false;
         }
-        
+
         public static implicit operator FieldComparison(Field field)
         {
             return field == true;
+        }
+
+        public static implicit operator SelectedField(Field field)
+        {
+            return new SelectedField { Field = field };
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace Pagan.Relationships
 {
-    public class HasOne<T> : Principal<T>
+    public class HasOne<T> : Principal<T> where T : class,new()
     {
         public HasOne(string name) : base(name)
         {

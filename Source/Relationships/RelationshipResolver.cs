@@ -6,13 +6,18 @@ using Pagan.SqlObjects;
 
 namespace Pagan.Relationships
 {
-    class RelationshipResolver
+    class RelationshipResolver : IRelationshipResolver
     {
         private readonly IDefinitionFactory _factory;
 
-        public RelationshipResolver(IDefinitionFactory factory)
+        internal RelationshipResolver(IDefinitionFactory factory)
         {
             _factory = factory;
+        }
+
+        public JoinedTable GetJoin(Relationship relationship)
+        {
+            return GetJoin(relationship.DefiningType, relationship.RelatedType);
         }
 
         public JoinedTable GetJoin(Type leftType, Type rightType)
@@ -48,7 +53,7 @@ namespace Pagan.Relationships
                 End = leftEnd.RelatesTo,
                 JoinCondition = joinCondition,
                 Multiplicity = leftEnd.Multiplicity,
-                Table = right.Table
+                Definition = right
             };
         }
 

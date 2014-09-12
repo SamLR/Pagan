@@ -46,6 +46,12 @@
     <Compile Include="Configuration\DefinitionError.cs" />
     <Compile Include="Configuration\IDefinitionItem.cs" />
     <Compile Include="Configuration\IDefinition.cs" />
+    <Compile Include="Linq\Database.cs" />
+    <Compile Include="Linq\IQueryBuilder.cs" />
+    <Compile Include="Linq\Query.cs" />
+    <Compile Include="Linq\QueryBuilder.cs" />
+    <Compile Include="Relationships\IRelationship.cs" />
+    <Compile Include="Relationships\IRelationshipResolver.cs" />
     <Compile Include="Relationships\Principal.cs" />
     <Compile Include="Relationships\HasMany.cs" />
     <Compile Include="Relationships\HasOne.cs" />
@@ -72,7 +78,6 @@
     <Compile Include="SqlObjects\AggregatedField.cs" />
     <Compile Include="SqlObjects\AggregateFunction.cs" />
     <Compile Include="SqlObjects\OrderedField.cs" />
-    <Compile Include="SqlObjects\QueryBuilder.cs" />
     <Compile Include="SqlObjects\SelectedField.cs" />
     <Compile Include="SqlObjects\SortDirection.cs" />
     <Compile Include="SqlObjects\Source.cs" />

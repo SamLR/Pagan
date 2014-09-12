@@ -5,11 +5,6 @@ using Pagan.SqlObjects;
 
 namespace Pagan.Configuration
 {
-    interface IDefinition<out T>: IDefinition
-    {
-        T Instance { get; }
-    }
-
     interface IDefinition
     {
         Type Type { get; }

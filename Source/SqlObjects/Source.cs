@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Pagan.Configuration;
 
 namespace Pagan.SqlObjects
 {
@@ -8,8 +9,14 @@ namespace Pagan.SqlObjects
     /// </summary>
     class Source
     {
-        public Table Table { get; set; }
-        public List<JoinedTable> JoinedTables { get; set; }
+        public Source()
+        {
+            JoinedTables = new List<JoinedTable>();
+        }
+
+        internal IDefinition Definition;
+        public Table Table { get { return Definition.Table; } }
+        public List<JoinedTable> JoinedTables { get; private set; }
         public SqlQuery SubSqlQuery { get; set; }
     }
 }

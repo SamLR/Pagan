@@ -2,8 +2,10 @@ using Pagan.SqlObjects;
 
 namespace Pagan.Tests.SampleDefinitions
 {
-    // Same as Users definition, except with a Configure method.
-    // Also provide a Table property to map the name
+    /// <summary>
+    /// Same as Users definition, except with a Configure method.
+    /// Also provides a Table property to map the table name, and an explicit Schema property.
+    /// </summary>
     public class UsersEx: Users
     {
         public Schema Dbo { get; set; }

@@ -6,7 +6,7 @@ using Pagan.SqlObjects;
 
 namespace Pagan.Relationships
 {
-    public abstract class Dependent<T> : Relationship<T>
+    public abstract class Dependent<T> : Relationship<T> where T:class,new()
     {
         protected Dependent(string name) : base(name)
         {

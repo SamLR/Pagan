@@ -1,11 +1,16 @@
-﻿using System;
-
-namespace Pagan.Conditions
+﻿namespace Pagan.Conditions
 {
     public abstract class Condition
     {
+        public static implicit operator bool(Condition c)
+        {
+            return true;
+        }
+
         public static Condition operator &(Condition left, Condition right)
         {
+            if (left == null) return right; // convenience to support c1 &= c2 = c2 when c1 is null
+
             var leftGroup = left as LogicalGroup;
             var rightGroup = right as LogicalGroup;
 
@@ -20,6 +25,8 @@ namespace Pagan.Conditions
 
         public static Condition operator |(Condition left, Condition right)
         {
+            if (left == null) return right; // convenience to support c1 &= c2 = c2 when c1 is null
+
             var leftGroup = left as LogicalGroup;
             var rightGroup = right as LogicalGroup;
 

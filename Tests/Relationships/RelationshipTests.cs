@@ -1,10 +1,7 @@
-﻿using System;
-using System.Linq;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using Pagan.Conditions;
 using Pagan.Configuration;
 using Pagan.Relationships;
-using Pagan.SqlObjects;
 using Pagan.Tests.SampleDefinitions;
 
 namespace Pagan.Tests.Relationships
@@ -12,112 +9,63 @@ namespace Pagan.Tests.Relationships
     [TestFixture]
     public class RelationshipTests
     {
+        private IRelationshipResolver _resolver;
         private IDefinitionFactory _factory;
 
         [SetUp]
         public void Setup()
         {
             _factory = new DefinitionFactory();
-        }
-
-        private IDefinition GetUsers()
-        {
-            return _factory.GetDefinition(typeof (Users));
-        }
-
-        private IDefinition GetBlogs()
-        {
-            return _factory.GetDefinition(typeof (Blogs));
-        }
-
-        private Relationship GetMissingTwinEnd()
-        {
-            return _factory.GetDefinition(typeof(NoTwinExample)).Relationships[0];
-        }
-
-        private Field GetUserField(string name)
-        {
-            return GetUserEnd().Definition.Fields.First(x => String.Equals(x.MemberName, name, StringComparison.InvariantCultureIgnoreCase));
-        }
-
-        private Field GetBlogField(string name)
-        {
-            return GetBlogEnd().Definition.Fields.First(x => String.Equals(x.MemberName, name, StringComparison.InvariantCultureIgnoreCase));
+            _resolver = new RelationshipResolver(_factory);
         }
 
         [Test]
-        public void GetRelationshipTypeFromDeclaringEnd()
+        public void GetJoinFromDeclaringEnd()
         {
-            var blogRel = GetBlogEnd();
-            var type = blogRel.GetJoin().Type;
+            var join = _resolver.GetJoin(typeof (Blogs), typeof (Users));
 
-            Assert.AreEqual(RelationshipType.HasMany, type);
-        }
-
-        [Test]
-        public void GetRelationshipTypeFromTwinEnd()
-        {
-            var userEnd = GetUserEnd();
-            var type = userEnd.GetJoin().Type;
-
-            Assert.AreEqual(RelationshipType.HasMany, type);
-        }
-
-
-        [Test]
-        public void GetTableRoleFromDeclaringEnd()
-        {
-            var blogRel = GetBlogEnd();
-            var role = blogRel.GetJoin().Role;
-
-            Assert.AreEqual(RelationshipEnd.Principal, role);
-        }
-
-        [Test]
-        public void GetTableRoleFromTwinEnd()
-        {
-            var userEnd = GetUserEnd();
-            var role = userEnd.GetJoin().Role;
-
-            Assert.AreEqual(RelationshipEnd.Dependent, role);
-        }
-
-        [Test]
-        public void GetJoinConditionFromDeclaringEnd()
-        {
-            var join = GetBlogEnd().GetJoin();
-            var condition = (LogicalGroup)join.JoinCondition;
-            var conditions = condition.Conditions.Cast<FieldJoin>().ToArray();
-            var left = GetUserField("Id");
-            var right = GetBlogField("UserId");
+            Assert.NotNull(join);
+            Assert.AreEqual("Users", join.Table.Name);
+            Assert.AreEqual(RelationshipEnd.Principal, join.End);
+            Assert.AreEqual(Multiplicity.One, join.Multiplicity);
             
-            Assert.AreEqual(1, conditions.Length);
-            Assert.AreSame(left, conditions[0].Left);
-            Assert.AreSame(right, conditions[0].Right);
+            var condition = (FieldJoin) join.JoinCondition;
+            Assert.AreEqual("Users", condition.Left.Table.Name);
+            Assert.AreEqual("Blogs", condition.Right.Table.Name);
+
+            Assert.AreEqual("Id", condition.Left.Name);
+            Assert.AreEqual("UserId", condition.Right.Name);
         }
 
         [Test]
-        public void GetJoinConditionFromTwinEnd()
+        public void GetJoinFromRelatedEnd()
         {
-            var join = GetUserEnd().GetJoin();
-            var condition = (LogicalGroup) join.JoinCondition;
-            var conditions = condition.Conditions.Cast<FieldJoin>().ToArray();
-            var left = GetUserField("Id");
-            var right = GetBlogField("UserId");
+            var join = _resolver.GetJoin(typeof(Users), typeof(Blogs));
 
-            Assert.AreEqual(1, conditions.Length);
-            Assert.AreSame(left, conditions[0].Left);
-            Assert.AreSame(right, conditions[0].Right);
+            Assert.NotNull(join);
+            Assert.AreEqual("Blogs", join.Table.Name);
+            Assert.AreEqual(RelationshipEnd.Dependent, join.End);
+            Assert.AreEqual(Multiplicity.Many, join.Multiplicity);
+
+            var condition = (FieldJoin)join.JoinCondition;
+            Assert.AreEqual("Users", condition.Left.Table.Name);
+            Assert.AreEqual("Blogs", condition.Right.Table.Name);
+
+            Assert.AreEqual("Id", condition.Left.Name);
+            Assert.AreEqual("UserId", condition.Right.Name);
         }
 
         [Test]
-        public void MissingTwinThrows()
+        public void UndefinedMappingThrows()
         {
-            Assert.Throws<RelationshipError>(() =>
-            {
-                var missing = GetMissingTwinEnd();
-                missing.GetJoin();
-            });
+            Assert.Throws<RelationshipError>(() => _resolver.GetJoin(typeof (BadRelationsExample), typeof (Users)));
         }
+
+        [Test]
+        public void UndefinedRelationshipThrows()
+        {
+            Assert.Throws<RelationshipError>(() => _resolver.GetJoin(typeof(BadRelationsExample), typeof(Blogs)));
+        }
+
     }
 }

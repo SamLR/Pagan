@@ -6,7 +6,7 @@ using Pagan.SqlObjects;
 
 namespace Pagan.Relationships
 {
-    public abstract class Principal<T> : Relationship<T>
+    public abstract class Principal<T> : Relationship<T> where T:class,new()
     {
         protected Principal(string name): base(name)
         {

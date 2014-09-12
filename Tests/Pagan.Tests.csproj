@@ -43,13 +43,14 @@
     <Compile Include="AdapterTests\MSSqlServerAdapterTests.cs" />
     <Compile Include="Conditions\LogicalGroupTests.cs" />
     <Compile Include="Configuration\DefinitionTests.cs" />
+    <Compile Include="Linq\LinqTests.cs" />
     <Compile Include="Relationships\RelationshipTests.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="SampleDefinitions\Blog.cs" />
     <Compile Include="SampleDefinitions\NoKeyExample.cs" />
     <Compile Include="SampleDefinitions\NoFieldExample.cs" />
-    <Compile Include="SampleDefinitions\NoTwinExample.cs" />
+    <Compile Include="SampleDefinitions\BadRelationsExample.cs" />
     <Compile Include="SampleDefinitions\Users.cs" />
     <Compile Include="SampleDefinitions\UsersEx.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
