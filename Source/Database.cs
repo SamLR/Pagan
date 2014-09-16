@@ -18,6 +18,7 @@ namespace Pagan
         private readonly IDbAdapter _adapter;
         private readonly DbConnection _connection;
         private readonly ITableFactory _factory;
+        private DbTransaction _currentTxn;
         private bool _disposed;
 
         public Database(string name, ITableConventions conventions = null)
@@ -73,7 +74,7 @@ namespace Pagan
         public DbTransaction Transaction()
         {
             EnsureConnection();
-            return _connection.BeginTransaction();
+            return _currentTxn = _connection.BeginTransaction();
         }
 
         public IEnumerable<dynamic> Query<T>(Func<T, Query> action)
@@ -130,6 +131,7 @@ namespace Pagan
             cmd.CommandText = cmdText;
             cmd.CommandTimeout = 0;
             cmd.CommandType = isSproc ? CommandType.StoredProcedure : CommandType.Text;
+            cmd.Transaction = _currentTxn;
 
             if (args != null)
                 args.GetType().GetProperties().ForEach(p =>
@@ -189,6 +191,7 @@ namespace Pagan
         internal DbCommand GetDbCommand(IQuery query)
         {
             var cmd = _connection.CreateCommand();
+            cmd.Transaction = _currentTxn;
             var translation = _adapter.TranslateQuery(query);
             translation.BuildCommand(cmd);
             return cmd;
@@ -197,6 +200,7 @@ namespace Pagan
         internal DbCommand GetDbCommand(ICommand cmd)
         {
             var dbCommand = _connection.CreateCommand();
+            dbCommand.Transaction = _currentTxn;
             var translation = _adapter.TranslateCommand(cmd);
             translation.BuildCommand(dbCommand);
             return dbCommand;
